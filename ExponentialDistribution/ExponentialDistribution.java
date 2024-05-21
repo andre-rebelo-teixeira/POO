@@ -1,4 +1,6 @@
-package ExponentialDistribution
+package ExponentialDistribution;
+
+
 
 import java.util.Random;   
 

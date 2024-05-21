@@ -1,6 +1,7 @@
 package ExponentialDistribution;
 
 
+
 /**
  * ExponentialDistributionInterface.java
  * Interface for the ExponentialDistribution class

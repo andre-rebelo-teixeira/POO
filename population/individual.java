@@ -1,85 +1,77 @@
 package population;
 
-
-// import from costum package
-import Pair.Pair;
-import population.Cost;
-
 // import from java
 import java.util.*;
+
+import population.Patrol;
+import population.PlanetarySystem;
 
 public class individual {
     private int number_of_planetary_systems;
     private int number_of_patrols;
 
-    private Map<Integer, ArrayList<Integer>> planets_patrols_id; // int for the patrol id and the vector will be all tha planetary system he is tasked with defending
+	private float random;
     
-    private ArrayList <Integer> patrol_list;
-    private ArrayList <Integer> planet_list;
-    
-    private Cost cost;
+    private ArrayList <Patrol> patrol_list;
+    private ArrayList <PlanetarySystem> planet_list;
+	
+	private HashMap <PlanetarySystem, Patrol> PlanetarySystem_patrol;
+	int [][] cost_matrix;
 
 
-    public individual (int number_of_planetary_systems, int number_of_patrols, Cost cost_matrix) {
-        
-
+    public individual (int number_of_planetary_systems, int number_of_patrols, int[][] cost_matrix) {
         this.number_of_planetary_systems = number_of_planetary_systems;
-        this.number_of_patrols =~- number_of_patrols;
-
-        this.planets_patrols_id = new HashMap<>();
-
-        this.cost = cost_matrix;
-        
-        for (int i = 0; i < number_of_patrols; i++) {
-            this.planets_patrols_id.put(i, new ArrayList<>());
-        }
+        this.number_of_patrols = number_of_patrols;
+       	this.cost_matrix = cost_matrix;
 
         this.patrol_list = new ArrayList<Integer>();
         this.planet_list = new ArrayList<Integer>();
 
-        for (int i = 0; i < this.number_of_planetary_systems; i++) {
-            planet_list.add(i);
-        }
+        for (int i = 0; i < number_of_patrols; i++) {
+            this.patrol_list.add(new Patrol(i));
+        }        
 
-        for (int i = 0; i < this.number_of_patrols; i++) {
-            patrol_list.add(i);
+        for (int i = 0; i < this.number_of_planetary_systems; i++) {
+            this.planet_list.add(new PlanetarySystem(i));
         }
     }
-
 
     public int get_max_patrol_time(){
         int max_time = 0;
 
         for (int i = 0; i < this.number_of_patrols; i++) {
-            int current_time = 0;
-
-            ArrayList <Integer> planets = this.planets_patrols_id.get(i);
-
-            // compute cost here
-            for (int j = 0; j < planets.size(); j++) {
-                current_time += this.cost.get_cost(planets.get(j), i);
-            }
+            int current_time = this.patrol_list.get(i).get_patrol_time();
 
             max_time = Math.max(max_time, current_time);
         }
-
         return max_time;
     }
 
     public void create_random_patrol_distribution() {
-        Collections.shuffle(patrol_list);
-        Collections.shuffle(planet_list);
-
         Random rand = new Random();
 
-        for (int i = 0; i < number_of_planetary_systems; i++) {
-
-            // get random number for the number of the patrol associates with this planet
-            int random_index = rand.nextInt(planet_list.size());
-
-            this.planets_patrols_id.get(random_index).add(planet_list.get(random_index));
+        for (int i = 0; i < this.number_of_planetary_systems; i++){
+            int patrol = rand.nextInt(this.number_of_patrols);  
+            this.patrol_list.get(patrol).patrol_new_plannet(i, planet_list.get(i));
+            this.PlannetarySystem_patrol.put(i, patrol);
         }
     }
+
+	public void assign_planetary_system_to_random_patrol(int planetary_system) {
+        Random rand = new Random();
+        int patrol = rand.nextInt(this.number_of_patrols);
+
+        this.PlannetarySystem_patrol.remove(plantary_system);
+
+        this.patrol_list.get(patrol).patrol_new_plannet(planetary_system, planet_list.get(planetary_system));
+        this.PlannetarySystem_patrol.put(planetary_system, patrol);
+        return;
+    }
+
+	public float get_comfort_level(int t_min) {
+		// the comfort level is defined as the time for this individual divided by the min time
+		return (float) this.get_max_patrol_time() / t_min;
+	}
 
     public int getNumber_of_planetary_systems() {
         return number_of_planetary_systems;
@@ -121,11 +113,11 @@ public class individual {
         this.planet_list = planet_list;
     }
 
-    public Cost getCost() {
-        return this.cost;
+    public int[][] getCost() {
+        return this.cost_matrix;
     }
 
-    public void setCost(Cost cost) {
-        this.cost = cost;
+    public void setCost(int [][] cost) { 
+        this.cost_matrix = cost;
     }
 }
