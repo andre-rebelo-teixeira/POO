@@ -8,35 +8,35 @@ package ExponentialDistribution;
  * 
  * Created on 16/06/2023
  */
-public inteface ExponentialDistributionInterface {
+public interface ExponentialDistributionInterface {
     
     /*
         * Get the lambda of the distribution 
         *
         * @return The lambda of the distribution
         */
-    public float getLambda();
+    public double getLambda();
     
     /*
         * Set the lambda of the distribution
         *
         * @param lambda The lambda of the distribution
         */
-    public void setLambda(float lambda);
+    public void setLambda(double lambda);
     
     /*
         * Get the mean of the distribution
         *
         * @return The mean of the distribution
         */
-    public float getMean();
+    public double getMean();
 
     /*
         * Set the mean of the distribution
         *
         * @param mean The mean of the distribution
         */ 
-    public void setMean(float mean);
+    public void setMean(double mean);
 
     /*
         * Get the variance of the distribution
@@ -44,7 +44,7 @@ public inteface ExponentialDistributionInterface {
         * @return The variance of the distribution
         */
 
-    public float getVariance();
+    public double getVariance();
 
     /*
         * Get the probability density function of the distribution
@@ -52,7 +52,7 @@ public inteface ExponentialDistributionInterface {
         * @param x The value at which the pdf is to be calculated
         * @return The pdf of the distribution at x
         */    
-    public float getPdf(flaot x);
+    public double getPdf(double x);
     
     /*
         * Get the cumulative distribution function of the distribution
@@ -60,7 +60,7 @@ public inteface ExponentialDistributionInterface {
         * @param x The value at which the cdf is to be calculated
         * @return The cdf of the distribution at x
         */
-    public float getCdf(float x);
+    public double getCdf(double x);
 
     /*
         * Get the quantile of the distribution
@@ -68,7 +68,7 @@ public inteface ExponentialDistributionInterface {
         * @param p The probability at which the quantile is to be calculated
         * @return The quantile of the distribution at p
         */ 
-    public float getQuantile(float p);
+    public double getQuantile(double p);
     
     /*
         * Get the exponential value of the distribution
@@ -76,12 +76,12 @@ public inteface ExponentialDistributionInterface {
         * @param x The value at which the exponential value is to be calculated
         * @return The exponential value of the distribution at x
         */
-    public float getExponentialVal(float x);
+    public double getExponentialVal(double x);
 
     /*
         * Get the exponential random value of the distribution
         *
         * @return The exponential random value of the distribution
         */
-    public float getExponentialRandom();
+    public double getExponentialRandom();
 }

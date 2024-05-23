@@ -6,7 +6,7 @@ import java.util.*;
 import population.Patrol;
 import population.PlanetarySystem;
 
-public class individual {
+class individual {
     private int number_of_planetary_systems;
     private int number_of_patrols;
 
@@ -24,16 +24,24 @@ public class individual {
         this.number_of_patrols = number_of_patrols;
        	this.cost_matrix = cost_matrix;
 
-        this.patrol_list = new ArrayList<Integer>();
-        this.planet_list = new ArrayList<Integer>();
+        this.patrol_list = new ArrayList<Patrol>();
+        this.planet_list = new ArrayList<PlanetarySystem>();
+        this.PlanetarySystem_patrol = new HashMap<PlanetarySystem, Patrol>();
 
-        for (int i = 0; i < number_of_patrols; i++) {
-            this.patrol_list.add(new Patrol(i));
+      for (int i = 0; i < number_of_patrols; i++) {
+            Integer[] patrol_cost = new Integer[this.number_of_planetary_systems];
+            for  (int j  = 0; j < number_of_planetary_systems; j++) {
+                patrol_cost[j] = this.cost_matrix[i][j];
+            }
+
+            this.patrol_list.add(new Patrol(i,patrol_cost));
         }        
 
         for (int i = 0; i < this.number_of_planetary_systems; i++) {
             this.planet_list.add(new PlanetarySystem(i));
         }
+
+
     }
 
     public int get_max_patrol_time(){
@@ -52,8 +60,12 @@ public class individual {
 
         for (int i = 0; i < this.number_of_planetary_systems; i++){
             int patrol = rand.nextInt(this.number_of_patrols);  
-            this.patrol_list.get(patrol).patrol_new_plannet(i, planet_list.get(i));
-            this.PlannetarySystem_patrol.put(i, patrol);
+            this.patrol_list.get(patrol).patrol_new_planet(i, planet_list.get(i));
+            this.PlanetarySystem_patrol.put(this.planet_list.get(i), this.patrol_list.get(patrol));
+        }
+
+        for (Patrol patrol : this.patrol_list) {
+            patrol.print_patrolled_plannets();
         }
     }
 
@@ -61,10 +73,10 @@ public class individual {
         Random rand = new Random();
         int patrol = rand.nextInt(this.number_of_patrols);
 
-        this.PlannetarySystem_patrol.remove(plantary_system);
+        this.PlanetarySystem_patrol.remove(this.planet_list.get(planetary_system));
 
-        this.patrol_list.get(patrol).patrol_new_plannet(planetary_system, planet_list.get(planetary_system));
-        this.PlannetarySystem_patrol.put(planetary_system, patrol);
+        this.patrol_list.get(patrol).patrol_new_planet(planetary_system, planet_list.get(planetary_system));
+        this.PlanetarySystem_patrol.put(this.planet_list.get(planetary_system), this.patrol_list.get(patrol));
         return;
     }
 
@@ -89,35 +101,29 @@ public class individual {
         this.number_of_patrols = number_of_patrols;
     }
 
-    public Map<Integer, ArrayList<Integer>> getPlanets_patrols_id() {
-        return planets_patrols_id;
+    public float getRandom() {
+        return random;
     }
 
-    public void setPlanets_patrols_id(Map<Integer, ArrayList<Integer>> planets_patrols_id) {
-        this.planets_patrols_id = planets_patrols_id;
+    public void setRandom(float random) {
+        this.random = random;
     }
 
-    public ArrayList<Integer> getPatrol_list() {
+    public ArrayList<Patrol> getPatrol_list() {
         return patrol_list;
     }
 
-    public void setPatrol_list(ArrayList<Integer> patrol_list) {
+    public void setPatrol_list(ArrayList<Patrol> patrol_list) {
         this.patrol_list = patrol_list;
     }
 
-    public ArrayList<Integer> getPlanet_list() {
-        return planet_list;
+    public int[][] getCost_matrix() {
+        return cost_matrix;
     }
 
-    public void setPlanet_list(ArrayList<Integer> planet_list) {
-        this.planet_list = planet_list;
+    public void setCost_matrix(int[][] cost_matrix) {
+        this.cost_matrix = cost_matrix;
     }
 
-    public int[][] getCost() {
-        return this.cost_matrix;
-    }
 
-    public void setCost(int [][] cost) { 
-        this.cost_matrix = cost;
-    }
 }

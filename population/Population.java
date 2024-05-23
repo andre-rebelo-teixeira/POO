@@ -1,17 +1,13 @@
-ipackage population;
+package population;
 
-import java.util.ArrayList;
+import ExponentialDistribution.ExponentialDistributionInterface;
+
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
 
-import population.individual;
-import population.Patrol;
-import population.PlannetarySystem;
-import ExponentialDistribution.ExponentialDistributionInterface;     
 
-
-public class population {
+public class Population {
     private HashMap<Integer, individual> individuals;
     private Vector<Integer> plannetary_system_vec;
 
@@ -24,16 +20,23 @@ public class population {
 
 	private ExponentialDistributionInterface expo_random;
 
-    public population(Integer size, Integer number_of_planetary_systems, Integer number_of_patrols, int[][] cost_matrix){
+    public Population(Integer size,
+					  Integer number_of_planetary_systems,
+					  Integer number_of_patrols,
+					  int[][] cost_matrix){
         this.size = size;   
         this.number_of_planetary_systems = number_of_planetary_systems;
         this.number_of_patrols = number_of_patrols;
+		this.individuals = new HashMap<>();
+		this.plannetary_system_vec = new Vector<>();
 		
 		this.cost_matrix = cost_matrix;
 
         for (int i = 0; i < this.size; i++){
-            this.individuals.put(i, new individual(this.number_of_planetary_systems, this.number_of_patrols, this.cost_matrix));
-        }
+            individual ind = new individual(this.number_of_planetary_systems, this.number_of_patrols, this.cost_matrix);
+        	ind.create_random_patrol_distribution();
+			this.individuals.put(i, ind);
+		}
 
 		for (int i = 0; i < this.number_of_planetary_systems; i++) {
 			this.plannetary_system_vec.add(i);
@@ -56,27 +59,21 @@ public class population {
 	public Boolean reproduct_individual(int individual_id) {
 		individual ind = this.individuals.get(individual_id);
 		Vector<Integer> aux_vec = this.plannetary_system_vec;
-		Vector<Integer> plannets_to_be_replaced = new Vector<>();
+		Vector<Integer> planets_to_be_replaced = new Vector<Integer>();
 
-		int num_changed_plannets = (int)(1 - ind.get_confort_level(this.t_min)) * this.number_of_planetary_systems;
+		int num_changed_planets = (int)(1 - ind.get_comfort_level(this.t_min)) * this.number_of_planetary_systems;
 
 		Random rand  = new Random();
 		
-		for (int i = 0; i < num_changed_plannets; i++){
+		for (int i = 0; i < num_changed_planets; i++){
 			int index = rand.nextInt(aux_vec.size());
-				
-			plannets_to_be_replaced.add(index);
+
+			planets_to_be_replaced.add(index);
 			aux_vec.remove(index);
 		}
 
-		// add plannets once agains
-
-		
+		// add planets once agai
 			
 		return true;
 	}
-
-	
-
-	
 }

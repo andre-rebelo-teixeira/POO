@@ -11,14 +11,14 @@ import java.util.Random;
     * Created on 16/06/2023
 */
 public class ExponentialDistribution implements ExponentialDistributionInterface{
-    private float lambda = 0.0f;
+    private double lambda = 0.0f;
 
     /**
      * Constructor for the ExponentialDistribution class
      * 
      * @param lambda The rate parameter of the exponential distribution
      */
-    public ExponentialDistribution(float lambda){
+    public ExponentialDistribution(double lambda){
         this.lambda = lambda;
     }
 
@@ -27,7 +27,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return The lambda of the distribution
         */
-    public float getLambda(){
+    public double getLambda(){
         return lambda;
     }
 
@@ -36,7 +36,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @param lambda The lambda of the distribution
         */
-    public void setLambda(float lambda){
+    public void setLambda(double lambda){
         this.lambda = lambda;
     }
 
@@ -45,7 +45,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return The mean of the distribution
         */
-    public float getMean(){
+    public double getMean(){
         return 1/lambda;
     }
 
@@ -54,7 +54,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @param mean The mean of the distribution
         */
-    public void setMean(float mean){
+    public void setMean(double mean){
         this.lambda = 1/mean;
     }
 
@@ -63,7 +63,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return The variance of the distribution
         */
-    public float getVariance(){
+    public double getVariance(){
         return 1/(lambda*lambda);
     }
 
@@ -72,8 +72,8 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @param variance The variance of the distribution
         */
-    public float getPDF(float x){
-        return lambda*(float)Math.exp(-lambda*x);
+    public double getPdf(double x){
+        return lambda*(double)Math.exp(-lambda*x);
     }
 
     /* 
@@ -82,8 +82,8 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         * @param x The value to evaluate the CDF at
         * @return The value of the CDF at x
         */
-    public float getCDF(float x){
-        return 1-(float)Math.exp(-lambda*x);
+    public double getCdf(double x){
+        return 1-(double)Math.exp(-lambda*x);
     }
 
     /*
@@ -92,8 +92,8 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         * @param p The probability to get the quantile for
         * @return The quantile for the given probability
         */
-    public float getQuantile(float p){
-        return (float)Math.log(1-p)/(-lambda);
+    public double getQuantile(double p){
+        return (double)Math.log(1-p)/(-lambda);
     }
 
     /*
@@ -101,12 +101,12 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return A random value from the distribution
         */
-    public float getExponentialVal(float x) {
+    public double getExponentialVal(double x) {
         if (x < 0) {
             return 0;
         }
 
-        return (float) this.lambda * Math.exp(-this.lambda • x);
+        return (double) this.lambda * Math.exp(-this.lambda * x);
     }
 
     /*
@@ -114,7 +114,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return A random value from the distribution
         */
-    public float getExponentialRandom() {
+    public double getExponentialRandom() {
         Random rand = new Random();
 
         return this.getExponentialVal(rand.nextFloat());

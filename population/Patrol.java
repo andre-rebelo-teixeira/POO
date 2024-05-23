@@ -3,7 +3,7 @@ package population;
 import java.util.HashMap;
 import population.PlanetarySystem;
 
-public class Patrol {
+class Patrol {
 	private Integer id;
 	private HashMap<Integer, PlanetarySystem> patrolled_planetary_systems;
 	private Integer patrol_time[];
@@ -30,6 +30,14 @@ public class Patrol {
 			sum += this.patrol_time[id];
         }
 		return sum;
+	}
+
+	public void print_patrolled_plannets() {
+		System.out.println(this.id);
+		for (Integer id : this.patrolled_planetary_systems.keySet()) {
+			System.out.print(" " + id);
+		}
+		System.out.println();
 	}
 }
 
