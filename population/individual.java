@@ -69,6 +69,12 @@ class individual {
         }
     }
 
+    //  complete this
+    public void  change_distribution(Integer number_changes) {
+
+    }
+
+
 	public void assign_planetary_system_to_random_patrol(int planetary_system) {
         Random rand = new Random();
         int patrol = rand.nextInt(this.number_of_patrols);
