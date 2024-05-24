@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class MutationEvent extends GenericEvent{
-    MutationEvent(Population population, Integer id, Integer time){
+    final Integer num_changes;
+
+    MutationEvent(Population population, Integer id, Integer time, Integer num_changes){
         super(population, id, time);
+        this.num_changes = num_changes;
 
     }
 
@@ -19,7 +22,7 @@ public class MutationEvent extends GenericEvent{
 
     @Override
     Map<String, Integer> handle(Map<String, Integer> event_counter) {
-        this.population.mutate_individial(this.indiviual_id);
+        this.population.change_distribution_of_individual(this.individual_id, this.num_changes);
         return this.update_event_counter(event_counter);
     }
 }

@@ -2,7 +2,7 @@ package Event;
 
 import population.Population;
 import java.util.Map;
-//import SimulInfo.SimulInfo;
+
 
 /**
  * This is an Abstract Class that will create the base line for what an event is in the context 
@@ -27,12 +27,11 @@ public abstract class GenericEvent {
 
 	/**
 	 * This Method will be inherited by all the classes that extent the Generic Event class
-	 *
 	 * This class will be used to keep a counter of how many times an event has occurred, since the body of the class
 	 * will be the same for all the dependent classed we can define it only once inside this Class and use inheritance to
 	 * save work
 	 *
-	 * @param event_counter The map that will be counting the amount of time each Event type has occured
+	 * @param event_counter The map that will be counting the amount of time each Event type has occurred
 	 * @return	Updated Event counter map
 	 */
 	protected Map<String, Integer> update_event_counter(Map<String, Integer> event_counter) {
