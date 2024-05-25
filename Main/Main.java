@@ -10,7 +10,7 @@ public class Main {
         // Print the parameters and generated or read cost matrix for verification
         System.out.println("Number of Patrols: " + simData.get_numb_patrols());
         System.out.println("Number of Planets: " + simData.get_numb_planets());
-        System.out.println("Max Individuals: " + simData.get_max_individuals());
+        System.out.println("Max Population: " + simData.get_max_population());
         System.out.println("Generated/Read Cost Matrix:");
         for (int[] row : simData.getcostMatrix()) {
             for (int value : row) {
