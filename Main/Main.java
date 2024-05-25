@@ -1,19 +1,25 @@
 package Main;
-
-import population.Population;
+import SimulationData.SimulationData;
+import SimulationHandler.SimulationHandler;
 
 public class Main {
-    public static void main (String[] args) {
-        System.out.println("Imperial Safety Simulation starting with the given parameters");
-
-        int cost[][] = {    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 17, 18, 18, 19, 20},
-                {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 17, 18, 18, 19, 20},
-                {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 17, 18, 18, 19, 20}};
-
-        Population pop = new Population(4, 20, 3, cost);
-
-
-
-
+    public static void main(String[] args) {
+        SimulationData simData = new SimulationData();
+        simData.comand_line_arguments_parser(args);
+        
+        // Print the parameters and generated or read cost matrix for verification
+        System.out.println("Number of Patrols: " + simData.get_numb_patrols());
+        System.out.println("Number of Planets: " + simData.get_numb_planets());
+        System.out.println("Max Population: " + simData.get_max_population());
+        System.out.println("Generated/Read Cost Matrix:");
+        for (int[] row : simData.getcostMatrix()) {
+            for (int value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+    
+        SimulationHandler simul = new SimulationHandler(simData);
+        simul.start();
     }
 }
