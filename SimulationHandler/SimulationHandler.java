@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import SimulationData.SimulationData;
-import population.population;
+import population.Population;
 import Event.GenericEvent;
 
 
@@ -27,7 +27,7 @@ public class SimulationHandler {
     int numberOfEvents;
 
     SimulationData simulation_data;
-    population population;
+    Population population;
 
 
     Vector<Integer> confort_vector = new Vector<>();
@@ -40,7 +40,7 @@ public class SimulationHandler {
         this.maxTime = simulation_data.getFinalInstance();
         this.presentInstant = 0;
         this.realizedEvents = 0;
-        this.population = new population(simulation_data.getInitialPopulationSize(), 
+        this.population = new Population(simulation_data.getInitialPopulationSize(), 
                                         simulation_data.get_numb_planets(), 
                                         simulation_data.get_numb_patrols(), 
                                         simulation_data.getcostMatrix());
@@ -52,6 +52,8 @@ public class SimulationHandler {
     public void updateStats(){
         this.presentInstant++;
         this.observationNumber++;
+        this.populationSize = this.population.getPopSize();
+
     }
 
     // Increment time
@@ -63,6 +65,8 @@ public class SimulationHandler {
             if(this.confort == 1){
                 break;
             }
+            System.out.println("Testing pop"+this.population.getPopSize());
+            System.out.println(this.population);
             
 
             updateStats();
