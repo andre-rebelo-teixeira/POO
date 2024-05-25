@@ -7,6 +7,7 @@ package Event;
 
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
+import java.util.function.Predicate;
 
 /**
  * This is PEC (Pending Event Container). It implements a simple PriorityQueue wrapper for the class
@@ -21,6 +22,7 @@ import java.util.PriorityQueue;
  * @see GenericEvent
  * @see java.util.PriorityQueue
  * @see java.util.Comparator
+ * @see java.util.function.Predicate;
  * @since version 1.0
  */
 public class PEC {
@@ -76,5 +78,14 @@ public class PEC {
         }
 
         return q;
+    }
+
+    /**
+     * Remove all the objects from the Queue that follow a certain Filter
+     *
+     * @param e Filter That will be used to remove the object
+     */
+    public void removeEvents(Predicate<GenericEvent> e) {
+        this.event_queue.removeIf(e);
     }
 }
