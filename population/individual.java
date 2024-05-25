@@ -1,6 +1,7 @@
 package population;
 
 // import from java
+import java.sql.Array;
 import java.util.*;
 
 import population.Patrol;
@@ -11,6 +12,7 @@ class individual {
     private int number_of_patrols;
 
 	private float random;
+    Random rand;
     
     private ArrayList <Patrol> patrol_list;
     private ArrayList <PlanetarySystem> planet_list;
@@ -23,6 +25,7 @@ class individual {
         this.number_of_planetary_systems = number_of_planetary_systems;
         this.number_of_patrols = number_of_patrols;
        	this.cost_matrix = cost_matrix;
+           this.rand = new Random();
 
         this.patrol_list = new ArrayList<Patrol>();
         this.planet_list = new ArrayList<PlanetarySystem>();
@@ -71,9 +74,20 @@ class individual {
 
     //  complete this
     public void  change_distribution(Integer number_changes) {
+        ArrayList<Integer> all_planetary_systems = new ArrayList<Integer>();
 
+        // Create an Array list with all the planetary systems id
+        for (int i = 0; i < this.number_of_planetary_systems; i++) {
+            all_planetary_systems.add(i);
+        }
+
+        // iterate through all the number of changes we need to do and calculate a new patrol for them
+        for (int i = 0; i < number_changes; i++) {
+            int planetary_system = this.rand.nextInt(all_planetary_systems.size());
+            all_planetary_systems.remove(planetary_system);
+            this.assign_planetary_system_to_random_patrol(planetary_system);
+        }
     }
-
 
 	public void assign_planetary_system_to_random_patrol(int planetary_system) {
         Random rand = new Random();

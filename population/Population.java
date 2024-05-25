@@ -13,26 +13,27 @@ public class Population implements PopulationInterface {
     private HashMap<Integer, individual> individuals;
     private Vector<Integer> plannetary_system_vec;
 
-	private Integer size;
-    private Integer number_of_planetary_systems;
-    private Integer number_of_patrols;
-	private int [][] cost_matrix;
+	private Integer current_id;
+	private final Integer size;
+    private final Integer number_of_planetary_systems;
+    private final Integer number_of_patrols;
+	private final int [][] cost_matrix;
 	private int t_min;
-
 
 	private ExponentialDistributionInterface expo_random;
 
     public Population(Integer size,
 					  Integer number_of_planetary_systems,
 					  Integer number_of_patrols,
-					  int[][] cost_matrix){
-        this.size = size;   
+					  int[][] cost_matrix) {
+
         this.number_of_planetary_systems = number_of_planetary_systems;
+		this.plannetary_system_vec = new Vector<>();
         this.number_of_patrols = number_of_patrols;
 		this.individuals = new HashMap<>();
-		this.plannetary_system_vec = new Vector<>();
-		
 		this.cost_matrix = cost_matrix;
+		this.current_id = 0;
+        this.size = size;
 
         for (int i = 0; i < this.size; i++){
             individual ind = new individual(this.number_of_planetary_systems, this.number_of_patrols, this.cost_matrix);
@@ -43,41 +44,7 @@ public class Population implements PopulationInterface {
 		for (int i = 0; i < this.number_of_planetary_systems; i++) {
 			this.plannetary_system_vec.add(i);
 		}
-
-    };
-	
-	public Boolean kill_individual(int individual_id) {
-		this.individuals.remove(individual_id);
-		return true;
-	}
-	
-
-	public Boolean mutate_individial(int individual_id){
-		individual ind = this.individuals.get(individual_id);
-	
-		return true;
-	}
-
-	public Boolean reproduct_individual(int individual_id) {
-		individual ind = this.individuals.get(individual_id);
-		Vector<Integer> aux_vec = this.plannetary_system_vec;
-		Vector<Integer> planets_to_be_replaced = new Vector<Integer>();
-
-		int num_changed_planets = (int)(1 - ind.get_comfort_level(this.t_min)) * this.number_of_planetary_systems;
-
-		Random rand  = new Random();
-		
-		for (int i = 0; i < num_changed_planets; i++){
-			int index = rand.nextInt(aux_vec.size());
-
-			planets_to_be_replaced.add(index);
-			aux_vec.remove(index);
-		}
-
-		// add planets once agai
-			
-		return true;
-	}
+    }
 
 	@Override
 	public Boolean remove_one_individual(Integer individual_id) {
@@ -91,7 +58,7 @@ public class Population implements PopulationInterface {
 
 	@Override
 	public Boolean remove_individuals(ArrayList<Integer> individual_ids) {
-		boolean all_removed =true;
+		boolean all_removed = true;
 
 		for (Integer individual_id : individual_ids){
 			all_removed = all_removed && this.remove_one_individual(individual_id);
@@ -128,19 +95,28 @@ public class Population implements PopulationInterface {
 	@Override
 	public Integer create_new_copy_of_individual(Integer individual_id) {
 		individual ind = this.individuals.get(individual_id);
-		Integer new_id = 0;
+		Integer new_id = this.get_new_id();
 
+		// Simply puts, still need to shuffle the distributions around
 		if (ind != null) {
-			//  Copy stuff here
+			this.individuals.put(new_id, ind);
 			return new_id;
-
 		}
 
-		return new_id;
+		return -1;
 	}
 
 	@Override
-	public ArrayList<Pair<Integer, Integer>> create_new_copy_of_individuals(ArrayList<Pair<Integer, Integer>> individuals_changes) {
-		return null;
+	public ArrayList<Integer> create_new_copy_of_individuals(ArrayList<Pair<Integer, Integer>> individuals_changes) {
+		ArrayList <Integer> new_ids = new ArrayList<>();
+		for (Pair<Integer, Integer> individual_change : individuals_changes) {
+			new_ids.add((this.create_new_copy_of_individual(individual_change.getFirst()));
+		}
+		return new_ids;
+	}	
+
+	private Integer get_new_id() {
+		this.current_id = this.current_id + 1;
+		return	this.current_id;
 	}
 }

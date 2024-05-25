@@ -16,5 +16,5 @@ public interface PopulationInterface {
 
     public Integer create_new_copy_of_individual (Integer individual_id);
 
-    public ArrayList<Pair<Integer, Integer>> create_new_copy_of_individuals (ArrayList<Pair<Integer, Integer>> individuals_changes);
+    public ArrayList<Integer> create_new_copy_of_individuals (ArrayList<Pair<Integer, Integer>> individuals_changes);
 }
