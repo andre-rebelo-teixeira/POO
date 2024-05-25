@@ -1,7 +1,7 @@
-package Event;
+package CustomEvents;
 
 import population.Population;
-
+import Event.GenericEvent;
 import java.util.Map;
 
 public class DeathEvent extends GenericEvent{
