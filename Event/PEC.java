@@ -5,6 +5,8 @@
 
 package Event;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 import java.util.function.Predicate;
@@ -17,6 +19,9 @@ import java.util.function.Predicate;
  * @implNote Since this uses the PriorityQueue library, this is NOT thread-safe and should not be used for
  * multithreaded applications.
  *
+ * @implNote  Please take into consideration that the PriorityQueue is not organized in memory, but it is organized when
+ * using the function implement in the PEC
+ *
  * @author Andre Teixeira
  * @version 1.0
  * @see GenericEvent
@@ -25,15 +30,16 @@ import java.util.function.Predicate;
  * @see java.util.function.Predicate;
  * @since version 1.0
  */
-public class PEC {
+public class PEC{
     private final PriorityQueue<GenericEvent> event_queue;
-
+    private Map<String, Integer> EventCounter;
     /**
      * Constructor for PEC. Initializes the event queue with a custom comparator.
      */
     public PEC() {
         GenericEventComparator comparator = new GenericEventComparator();
         this.event_queue = new PriorityQueue<>(comparator);
+        this.EventCounter = new HashMap<>();
     }
 
     /**
@@ -51,6 +57,7 @@ public class PEC {
      * @return The event with the highest priority.
      */
     public GenericEvent poolEvent() {
+
         return this.event_queue.poll();
     }
 
@@ -59,7 +66,8 @@ public class PEC {
      *
      * @return The event with the highest priority.
      */
-    public GenericEvent peekEvent() {
+    public GenericEvent peekEvent()
+    {
         return this.event_queue.peek();
     }
 
@@ -73,7 +81,8 @@ public class PEC {
     public ArrayDeque<GenericEvent> getEventQueue(int max_time) {
         ArrayDeque<GenericEvent> q = new ArrayDeque<>();
 
-        while  (this.peekEvent().getHandling_time() <= max_time) {
+        // make sure we dont
+        while  (this.peekEvent() != null  && this.peekEvent().getHandling_time() <= max_time) {
             q.add(this.poolEvent());
         }
 
@@ -87,5 +96,17 @@ public class PEC {
      */
     public void removeEvents(Predicate<GenericEvent> e) {
         this.event_queue.removeIf(e);
+    }
+
+    public Integer get_num_events() {
+        return this.event_queue.size();
+    }
+
+    public Map<String, Integer> getEventCounter() {
+        return EventCounter;
+    }
+
+    public void setEventCounter(Map<String, Integer> eventCounter) {
+        EventCounter = eventCounter;
     }
 }

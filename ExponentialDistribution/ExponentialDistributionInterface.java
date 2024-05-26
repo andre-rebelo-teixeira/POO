@@ -83,5 +83,5 @@ public interface ExponentialDistributionInterface {
         *
         * @return The exponential random value of the distribution
         */
-    public double getExponentialRandom();
+    public double getExponentialRandom(Float max_x);
 }

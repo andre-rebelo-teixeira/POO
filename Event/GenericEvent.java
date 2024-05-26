@@ -1,6 +1,9 @@
 package Event;
 
 import population.Population;
+import population.PopulationInterface;
+
+
 import java.util.Map;
 
 /**
@@ -16,19 +19,17 @@ import java.util.Map;
  */
 public abstract class GenericEvent {
 	protected Integer individual_id;
-	protected Population population;
-	protected Integer handling_time;
+	protected Double handling_time;
 
 	/**
 	 * Constructor for GenericEvent.
 	 *
-	 * @param population The population involved in the event.
 	 * @param id The ID of the individual affected by the event.
 	 * @param handling_time The time at which the event will be handled.
 	 */
-	public GenericEvent(Population population, Integer id, Integer handling_time) {
-		this.population = population;
+	public GenericEvent(Integer id, Double handling_time) {
 		this.individual_id = id;
+		this.handling_time = handling_time;
 	}
 
 	/**
@@ -51,7 +52,7 @@ public abstract class GenericEvent {
 	 *
 	 * @return String corresponding to the name of the class.
 	 */
-	abstract String get_class_name();
+	public abstract String get_class_name();
 
 	/**
 	 * Abstract method that all classes that inherit from GenericEvent must define to handle the event.
@@ -59,7 +60,7 @@ public abstract class GenericEvent {
 	 * @param event_counter The map that will be counting the amount of time each Event type has occurred.
 	 * @return Updated Event counter-map.
 	 */
-	abstract Map<String, Integer> handle(Map<String, Integer> event_counter);
+	public abstract Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec);
 
 	/**
 	 * Gets the ID of the individual affected by the event.
@@ -70,30 +71,7 @@ public abstract class GenericEvent {
 		return individual_id;
 	}
 
-	/**
-	 * Gets the population involved in the event.
-	 *
-	 * @return The population.
-	 */
-	public Population getPopulation() {
-		return population;
-	}
-
-	/**
-	 * Gets the time at which the event will be handled.
-	 *
-	 * @return The handling time.
-	 */
-	public Integer getHandling_time() {
+	public Double getHandling_time() {
 		return handling_time;
-	}
-
-	/**
-	 * Sets the time at which the event will be handled.
-	 *
-	 * @param handling_time The new handling time.
-	 */
-	public void setHandling_time(Integer handling_time) {
-		this.handling_time = handling_time;
 	}
 }

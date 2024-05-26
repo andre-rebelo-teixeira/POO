@@ -17,4 +17,16 @@ public interface PopulationInterface {
     public Integer create_new_copy_of_individual (Integer individual_id);
 
     public ArrayList<Integer> create_new_copy_of_individuals (ArrayList<Pair<Integer, Integer>> individuals_changes);
+
+    public Integer get_population_size();
+
+    public Float get_comfort_value(Integer individual_id);
+
+    public ArrayList<Pair<Integer, Float>> get_comfort_vector();
+
+    public Boolean get_optimal_solution_found();
+
+    public String[] get_best_individuals_string();
+
+    public void start_new_epidemic();
 }

@@ -98,7 +98,9 @@ public class SimulationData {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 this.costMatrix[i][j] = 1 + random.nextInt(10); // Generates a random number between 1 and 10
+                System.out.print(this.costMatrix[i][j] + " ");
             }
+            System.out.println();
         }
     }
 
@@ -138,4 +140,43 @@ public class SimulationData {
         this.v_max = max_individuals;
     }
 
+    public int getPhi() {
+        return phi;
+    }
+
+    public int getSigma() {
+        return sigma;
+    }
+
+    public int getMu() {
+        return mu;
+    }
+
+    public int getV_max() {
+        return v_max;
+    }
+
+    public int getV() {
+        return v;
+    }
+
+    public int getTau() {
+        return tau;
+    }
+
+    public int getM() {
+        return m;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+    public int[][] getCostMatrix() {
+        return costMatrix;
+    }
+
+    public String getFile_path() {
+        return file_path;
+    }
 }

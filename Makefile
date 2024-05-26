@@ -1,33 +1,36 @@
-# Define variables
-JAVAC = javac
-JAVA = java
-OUT_DIR = out
+# Variables
+JAVAC=javac
+JAR=jar
+SRC_DIRS=CustomEvents Event ExponentialDistribution Main Pair population SimulationData SimulationHandler
+BIN_DIR=out
+MANIFEST=manifest.txt
+MAIN_CLASS=Main.Main
 
-# Directories to include
-SRC_DIRS = ExponentialDistribution Main Pair population Event
+# Targets
+all: clean compile jar
 
-# Find all .java source files in the specified directories
-SOURCES := $(shell find $(SRC_DIRS) -name "*.java")
+compile:
+	@mkdir -p $(BIN_DIR)
+	$(foreach dir, $(SRC_DIRS), $(JAVAC) -d $(BIN_DIR) $(dir)/*.java;)
 
-# Create a list of .class files to be generated
-CLASSES := $(SOURCES:%.java=$(OUT_DIR)/%.class)
+jar: compile
+	@echo "Main-Class: $(MAIN_CLASS)" > $(MANIFEST)
+	@$(JAR) cfm $(BIN_DIR)/yourapp.jar $(MANIFEST) -C $(BIN_DIR) .
 
-# Default target
-all: $(CLASSES)
-
-# Compile .java files to .class files
-$(OUT_DIR)/%.class: %.java
-	@mkdir -p $(dir $@)
-	$(JAVAC) -d $(OUT_DIR) $<
-
-# Run the main class
-run: all
-	$(JAVA) -cp $(OUT_DIR) Main.Main
-
-# Clean the build directory
 clean:
-	rm -rf $(OUT_DIR)
+	@rm -rf $(BIN_DIR)/*
+	@rm -f $(MANIFEST)
 
-# PHONY targets
-.PHONY: all run clean
+debug: clean
+	@mkdir -p $(BIN_DIR)
+	$(foreach dir, $(SRC_DIRS), $(JAVAC) -g -d $(BIN_DIR) $(dir)/*.java;)
+
+release: clean
+	@mkdir -p $(BIN_DIR)
+	$(foreach dir, $(SRC_DIRS), $(JAVAC) -O -d $(BIN_DIR) $(dir)/*.java;)
+
+run: compile
+	@java -cp $(BIN_DIR) $(MAIN_CLASS)
+
+.PHONY: all compile jar clean debug release run
 

@@ -1,7 +1,10 @@
 package CustomEvents;
 
 import Event.GenericEvent;
+import Event.PEC;
 import population.Population;
+import population.PopulationInterface;
+
 import java.util.Map;
 
 /**
@@ -9,19 +12,19 @@ import java.util.Map;
  * This event will create a new individual as a copy of the existing one and apply changes to the new individual.
  */
 public class ReproductionEvent extends GenericEvent {
-	final Integer num_changes;
+	private final Integer number_of_changes;
 
 	/**
 	 * Constructor for ReproductionEvent.
 	 *
-	 * @param population The population involved in the event.
+
 	 * @param id The ID of the individual that will reproduce.
 	 * @param time The time at which the event will be handled.
-	 * @param num_changes The number of changes in the genetic distribution of the new individual.
+	 * @param number_of_changes The number of changes in the genetic distribution of the new individual.
 	 */
-	public ReproductionEvent(Population population, Integer id, Integer time, Integer num_changes) {
-		super(population, id, time);
-		this.num_changes = num_changes;
+	public ReproductionEvent (Integer id, Double time, Integer number_of_changes) {
+		super(id, time);
+		this.number_of_changes = number_of_changes;
 	}
 
 	/**
@@ -30,7 +33,7 @@ public class ReproductionEvent extends GenericEvent {
 	 * @return The string "ReproductionEvent".
 	 */
 	@Override
-	String get_class_name() {
+	public String get_class_name() {
 		return "ReproductionEvent";
 	}
 
@@ -42,9 +45,9 @@ public class ReproductionEvent extends GenericEvent {
 	 * @return Updated Event counter-map.
 	 */
 	@Override
-	Map<String, Integer> handle(Map<String, Integer> event_counter) {
-		Integer new_id = this.population.create_new_copy_of_individual(this.individual_id);
-		this.population.change_distribution_of_individual(new_id, this.num_changes);
+	public Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec) {
+		Integer new_id = population.create_new_copy_of_individual(this.individual_id);
+		population.change_distribution_of_individual(new_id, this.number_of_changes );
 		return this.update_event_counter(event_counter);
 	}
 }

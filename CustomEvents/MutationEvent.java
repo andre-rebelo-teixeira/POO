@@ -1,27 +1,27 @@
 package CustomEvents;
 
 import Event.GenericEvent;
+import Event.PEC;
 import population.Population;
+import population.PopulationInterface;
+
 import java.util.Map;
-import java.util.PriorityQueue;
 
 /**
  * Represents an event where an individual's genetic distribution is changed.
  */
 public class MutationEvent extends GenericEvent {
-    final Integer num_changes;
+    private final Integer planet_to_change;
 
     /**
      * Constructor for MutationEvent.
      *
-     * @param population The population involved in the event.
      * @param id The ID of the individual that will undergo mutation.
      * @param time The time at which the event will be handled.
-     * @param num_changes The number of changes in the genetic distribution.
      */
-    MutationEvent(Population population, Integer id, Integer time, Integer num_changes) {
-        super(population, id, time);
-        this.num_changes = num_changes;
+    public MutationEvent(Integer id, Double time, Integer planet_to_change) {
+        super(id, time);
+        this.planet_to_change = planet_to_change;
     }
 
     /**
@@ -30,7 +30,7 @@ public class MutationEvent extends GenericEvent {
      * @return The string "MutationEvent".
      */
     @Override
-    String get_class_name() {
+    public String get_class_name() {
         return "MutationEvent";
     }
 
@@ -42,8 +42,8 @@ public class MutationEvent extends GenericEvent {
      * @return Updated Event counter-map.
      */
     @Override
-    Map<String, Integer> handle(Map<String, Integer> event_counter) {
-        this.population.change_distribution_of_individual(this.individual_id, this.num_changes);
+    public Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec) {
+        population.change_distribution_of_individual(this.individual_id, this.planet_to_change);
         return this.update_event_counter(event_counter);
     }
 }

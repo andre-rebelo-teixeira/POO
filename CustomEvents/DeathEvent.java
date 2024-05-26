@@ -1,7 +1,9 @@
 package CustomEvents;
 
-import population.Population;
+import Event.PEC;
 import Event.GenericEvent;
+import population.PopulationInterface;
+import java.util.function.Predicate;
 import java.util.Map;
 
 /**
@@ -9,16 +11,15 @@ import java.util.Map;
  * This event will remove the individual from the population.
  */
 public class DeathEvent extends GenericEvent {
-
+    Predicate<GenericEvent> remove_events;
     /**
-     * Constructor for DeathEvent.
-     *
-     * @param population The population involved in the event.
-     * @param id The ID of the individual that will die.
+     * Constructor for DeathEvent
+     * * @param id The ID of the individual that will die.
      * @param handling_time The time at which the event will be handled.
      */
-    public DeathEvent(Population population, Integer id, Integer handling_time) {
-        super(population, id, handling_time);
+    public DeathEvent(Integer id, Double handling_time) {
+        super(id, handling_time);
+        this.remove_events = event -> event.getIndividual_id().equals(this.getIndividual_id());
     }
 
     /**
@@ -27,7 +28,7 @@ public class DeathEvent extends GenericEvent {
      * @return The string "DeathEvent".
      */
     @Override
-    String get_class_name() {
+    public String get_class_name() {
         return "DeathEvent";
     }
 
@@ -39,8 +40,9 @@ public class DeathEvent extends GenericEvent {
      * @return Updated Event counter-map.
      */
     @Override
-    Map<String, Integer> handle(Map<String, Integer> event_counter) {
-        this.population.remove_one_individual(this.getIndividual_id());
+    public Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec) {
+        pec.removeEvents(remove_events);
+        population.remove_one_individual(this.getIndividual_id());
         return this.update_event_counter(event_counter);
     }
 }

@@ -114,9 +114,8 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         *
         * @return A random value from the distribution
         */
-    public double getExponentialRandom() {
+    public double getExponentialRandom(Float max_x) {
         Random rand = new Random();
-
-        return this.getExponentialVal(rand.nextFloat());
+        return this.getExponentialVal(rand.nextFloat(max_x));
     }
 }

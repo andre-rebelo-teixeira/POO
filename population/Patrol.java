@@ -39,5 +39,16 @@ class Patrol {
 		}
 		System.out.println();
 	}
+
+	public String get_patrolled_planets() {
+		StringBuilder patrol_info = new StringBuilder();
+
+		for (Integer id : this.patrolled_planetary_systems.keySet()) {
+			patrol_info.append(String.valueOf(id)).append(",");
+		}
+
+		return patrol_info.toString();
+
+	}
 }
 
