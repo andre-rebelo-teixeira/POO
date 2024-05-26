@@ -14,11 +14,31 @@ class Individual {
     private ArrayList <Patrol> patrol_list;
     private ArrayList <PlanetarySystem> planet_list;
 	
-	private HashMap <PlanetarySystem, Patrol> PlanetarySystem_patrol;
 	int [][] cost_matrix;
-    final Integer id;
+    Integer id;
     final Float t_min;
 
+    public Individual(Individual i, Integer id) {
+        this.id = id;
+        this.number_of_patrols = i.number_of_patrols;
+        this.number_of_planetary_systems = i.number_of_planetary_systems;
+        this.random = i.random;
+        this.rand = i.rand;
+        this.cost_matrix = i.cost_matrix;
+        this.t_min = i.t_min;
+        this.observers = i.observers;
+
+        this.patrol_list = new ArrayList<>();
+        this.planet_list = new ArrayList<>();
+
+        for(PlanetarySystem p :  i.planet_list) {
+            this.planet_list.add(p);
+        }
+
+        for (Patrol p : i.patrol_list) {
+            this.patrol_list.add(p);
+        }
+    }
 
     public Individual(Integer id, int number_of_planetary_systems, int number_of_patrols, int[][] cost_matrix, Float t_min) {
         this.id = id;
@@ -29,10 +49,8 @@ class Individual {
         this.t_min = t_min;
         this.observers = new ArrayList<>();
 
-
         this.patrol_list = new ArrayList<Patrol>();
         this.planet_list = new ArrayList<PlanetarySystem>();
-        this.PlanetarySystem_patrol = new HashMap<PlanetarySystem, Patrol>();
 
         for (int i = 0; i < number_of_patrols; i++) {
             Integer[] patrol_cost = new Integer[this.number_of_planetary_systems];
@@ -65,7 +83,6 @@ class Individual {
         for (int i = 0; i < this.number_of_planetary_systems; i++){
             int patrol = rand.nextInt(this.number_of_patrols);  
             this.patrol_list.get(patrol).patrol_new_planet(i, planet_list.get(i));
-            this.PlanetarySystem_patrol.put(this.planet_list.get(i), this.patrol_list.get(patrol));
         }
     }
 
@@ -89,16 +106,13 @@ class Individual {
         Random rand = new Random();
         int patrol = rand.nextInt(this.number_of_patrols);
 
-        this.PlanetarySystem_patrol.remove(this.planet_list.get(planetary_system));
-
         this.patrol_list.get(patrol).patrol_new_planet(planetary_system, planet_list.get(planetary_system));
-        this.PlanetarySystem_patrol.put(this.planet_list.get(planetary_system), this.patrol_list.get(patrol));
         return;
     }
 
 	public float get_comfort_level() {
 		// the comfort level is defined as the time for this individual divided by the min time
-		return (float) this.get_max_patrol_time() / this.t_min;
+		return (float)  this.t_min / this.get_max_patrol_time();
 	}
 
     public int getNumber_of_planetary_systems() {
@@ -159,7 +173,7 @@ class Individual {
         }
     }
 
-    public String get_string() {
+    public String get_information_string() {
         StringBuilder node_info = new StringBuilder();
         node_info = new StringBuilder("{");
         for (int i = 0; i < this.number_of_patrols; i++) {
@@ -173,6 +187,12 @@ class Individual {
         node_info.append(String.valueOf(this.get_max_patrol_time()));
         node_info.append(" : ");
         node_info.append(String.valueOf(this.get_comfort_level()));
+        node_info.append("  ");
+        node_info.append(String.valueOf(this.id));
         return node_info.toString();
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

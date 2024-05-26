@@ -73,7 +73,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         * @param variance The variance of the distribution
         */
     public double getPdf(double x){
-        return lambda*(double)Math.exp(-lambda*x);
+        return lambda*Math.exp(-lambda*x);
     }
 
     /* 
@@ -83,7 +83,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         * @return The value of the CDF at x
         */
     public double getCdf(double x){
-        return 1-(double)Math.exp(-lambda*x);
+        return 1-Math.exp(-lambda*x);
     }
 
     /*
@@ -93,7 +93,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
         * @return The quantile for the given probability
         */
     public double getQuantile(double p){
-        return (double)Math.log(1-p)/(-lambda);
+        return Math.log(1-p)/(-lambda);
     }
 
     /*
@@ -106,7 +106,7 @@ public class ExponentialDistribution implements ExponentialDistributionInterface
             return 0;
         }
 
-        return (double) this.lambda * Math.exp(-this.lambda * x);
+        return this.lambda * Math.exp(-this.lambda * x);
     }
 
     /*

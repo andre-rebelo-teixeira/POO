@@ -4,6 +4,8 @@ import ExponentialDistribution.ExponentialDistribution;
 import ExponentialDistribution.ExponentialDistributionInterface;
 import Pair.Pair;
 
+import java.util.Random;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -54,7 +56,7 @@ public class Population implements PopulationInterface, Observer {
 			ind.add_observer(this);
 
 			// Add individuals to where they should be
-			this.individuals.put(i, ind);
+			this.individuals.put(ind.id, ind);
 		}
 
 		for (int i = 0; i < this.number_of_planetary_systems; i++) {
@@ -111,13 +113,18 @@ public class Population implements PopulationInterface, Observer {
 
 	@Override
 	public Integer create_new_copy_of_individual(Integer individual_id) {
-		Individual ind = this.individuals.get(individual_id);
+		Individual ind;
+
+		ind = this.individuals.get(individual_id);
 		Integer new_id = this.get_new_id();
 
 		// Simply puts, still need to shuffle the distributions around
 		if (ind != null) {
-			System.out.println("Another individual added to the population");
-			this.individuals.put(new_id, ind);
+			Individual new_ind = new Individual(ind, new_id);
+			System.out.println("Prev individual " + individual_id + " new individual " + new_id);
+			this.individuals.put(new_id, new_ind);
+
+
 			return new_id;
 		}
 
@@ -144,14 +151,14 @@ public class Population implements PopulationInterface, Observer {
 		ArrayList<Pair<Integer, Float>> comfort_vector = new ArrayList<>();
 
 		for (Individual individual : this.individuals.values()) {
-			comfort_vector.add(new Pair<>(individual.getId() , (float) this.t_min / individual.get_max_patrol_time()  ));
+			comfort_vector.add(new Pair<>(individual.getId() , this.t_min / individual.get_max_patrol_time()  ));
 		}
 		return comfort_vector;
 	}
 
 	@Override
 	public Float get_comfort_value(Integer individual_id) {
-		return  (float) this.t_min /this.individuals.get(individual_id).get_max_patrol_time()  ;
+		return  this.t_min /this.individuals.get(individual_id).get_max_patrol_time()  ;
 	}
 
 	@Override
@@ -169,7 +176,6 @@ public class Population implements PopulationInterface, Observer {
 		}
 
 		ArrayList<Individual> temp = new ArrayList<>();
-
 		FixedSizePriorityQueueInterface<Individual> best_individuals = this.create_priority_queue(5);
 
 		while(!best_individuals.isEmpty() && best_individuals.peek() != null) {
@@ -178,14 +184,23 @@ public class Population implements PopulationInterface, Observer {
 			individual_ids.remove(ind.getId());
 		}
 
+		Random rand = new Random();
+
+		ArrayList<Integer>  remove_individual_ids = new ArrayList<>();
+
 		for (Integer individual_id : individual_ids) {
+			System.out.println("individual_id " + individual_id);
 			Individual ind = this.individuals.get(individual_id);
 
-			this.expo_random.setLambda((double) 2 / 3 * ind.get_comfort_level());
 
-			if (this.expo_random.getExponentialRandom((float) 10.0) < this.expo_random.getLambda()) {
-				this.remove_one_individual(individual_id);
+			if (! (2.0 / 3.0 * ind.get_comfort_level() * 100 < rand.nextDouble(0, 100))) {
+				remove_individual_ids.add(individual_id);
 			}
+		}
+
+		for (Integer individual_id : remove_individual_ids) {
+			this.individuals.remove(individual_id);
+			System.out.println("removed individual " + individual_id);
 		}
 
 		System.out.println("Ended epidemic with " +  this.individuals.size());
@@ -202,11 +217,16 @@ public class Population implements PopulationInterface, Observer {
 		int counter = 0;
 		while(!best_individuals.isEmpty() && best_individuals.peek() != null) {
 			Individual ind = best_individuals.poll();
-			best_individuals_string[counter] = ind.toString();
+			best_individuals_string[counter] = ind.get_information_string();
+			System.out.println("Val : " + best_individuals_string[counter]);
 		}
 		return best_individuals_string;
 	}
 
+	@Override
+	public Float get_time_min() {
+		return this.t_min;
+	}
 
 	@Override
 	public void update(int individualId, float comfortValue) {
@@ -256,8 +276,10 @@ public class Population implements PopulationInterface, Observer {
 
 		// Maybe change for q.addAll in the future
 		for (Individual individual : this.individuals.values()) {
+			System.out.print(individual.id + " ");
 			q.add(individual);
 		}
+		System.out.println();
 
 		return q;
 	}

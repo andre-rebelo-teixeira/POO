@@ -29,4 +29,6 @@ public interface PopulationInterface {
     public String[] get_best_individuals_string();
 
     public void start_new_epidemic();
+
+    public Float get_time_min();
 }

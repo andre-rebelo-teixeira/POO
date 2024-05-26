@@ -8,6 +8,14 @@ class Patrol {
 	private HashMap<Integer, PlanetarySystem> patrolled_planetary_systems;
 	private Integer patrol_time[];
 
+	public Patrol (Patrol p){
+		this.id = p.id;
+		this.patrol_time = p.patrol_time;
+		this.patrolled_planetary_systems = new HashMap<>();
+		for (Integer  i :  p.patrolled_planetary_systems.keySet()){
+			this.patrolled_planetary_systems.put(i, new PlanetarySystem(p.patrolled_planetary_systems.get(i)));
+		}
+	}
 	public Patrol (Integer id, Integer[] patrol_time) {
 		this.id = id;
 		this.patrol_time = patrol_time;

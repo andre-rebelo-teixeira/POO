@@ -12,9 +12,13 @@ import java.util.Objects;
 final class PlanetarySystem {
 	private final Integer id;
 
+	public PlanetarySystem(PlanetarySystem p) {
+		this.id = p.id;
+	}
+
 	/**
 	 *
-	 * Only method that allows us to Create an object of type PlanetarySystem,
+	 * method that allows us to Create an object of type PlanetarySystem,
 	 * The id of the object is final and can only be set through the constructor, in case we can to change the id,
 	 * we must delete the object and create a new one
 	 *

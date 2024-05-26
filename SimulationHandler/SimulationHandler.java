@@ -26,15 +26,13 @@ public class SimulationHandler {
     // Event and Observation variables
     private static final int PRINT_FREQUENCY = 20;
 
-    private ExponentialDistributionInterface exp_distribution;
+    private final ExponentialDistributionInterface exp_distribution;
 
-    private int maxTime;
-    private int realizedEvents;
+    private final int  maxTime;
     private int presentInstant;
     private int observationNumber;
     private int populationSize;
     private int numbEpidemics;
-    private int policingTime;
 
     private PEC event_container;
 
@@ -42,13 +40,10 @@ public class SimulationHandler {
     PopulationInterface population;
 
 
-    // Criar population
-    // Criar eventos
     public SimulationHandler(SimulationData simulation_data){
         this.simulation_data = simulation_data;
         this.maxTime = simulation_data.getFinalInstance();
         this.presentInstant = 0;
-        this.realizedEvents = 0;
         this.exp_distribution = new ExponentialDistribution(0.0);
 
         // start population
@@ -63,7 +58,7 @@ public class SimulationHandler {
 
         Collections.shuffle(conform_vector);
 
-        double time_counter = (double) 0;
+        double time_counter = 0;
 
         // Create all the start event for this class
 
@@ -73,12 +68,11 @@ public class SimulationHandler {
             double rand_time = exp_distribution.getExponentialRandom((float)1.0);
             this.event_container.addEvent(new DeathEvent(pair.getFirst(),  rand_time +  time_counter));
             time_counter += rand_time;
-            System.out.println();
         }
 
         // New Shuffle for the reproduction events
         Collections.shuffle(conform_vector);
-        time_counter = (double) 0;
+        time_counter = 0;
 
         for (Pair<Integer, Float> pair : conform_vector) {
             this.exp_distribution.setLambda( (1 - Math.log(pair.getSecond())  * simulation_data.getM()));
@@ -90,7 +84,7 @@ public class SimulationHandler {
 
         // New Shuffle for the mutation Events
         Collections.shuffle(conform_vector);
-        time_counter = (double) 0;
+        time_counter = 0;
         Random rand = new Random();
 
         for (Pair <Integer, Float> pair : conform_vector) {
@@ -118,6 +112,7 @@ public class SimulationHandler {
             // check end conditions
             // No more events in the PEc
             if (this.event_container.get_num_events() == 0) {
+                System.out.println("Out of events");
                 break;
             }
 
@@ -173,15 +168,19 @@ public class SimulationHandler {
     }
 
     public void print_simulation_observation(){
+        Map<String, Integer> event_counter = this.event_container.getEventCounter();
+        Integer count = event_counter.values().iterator().next();
+
+
         System.out.println("Observation "+ this.observationNumber +": "
             + "\n\t\t\tPresent Instant: " + this.presentInstant
-            + "\n\t\t\tNumber of realized events: " + this.realizedEvents
+            + "\n\t\t\tNumber of realized events: " + count
             + "\n\t\t\tPopulation size: " + this.populationSize
             + "\n\t\t\tNumber of epidemics: " + this.numbEpidemics
             + "\n\t\t\tBest distribution of the patrols: " 
-            + "\n\t\t\tEmpire policing time: " + this.policingTime
+            + "\n\t\t\tEmpire policing time: " + this.population.get_time_min()
             + "\n\t\t\tComfort: " + 0 // change latter
-            + "\n\t\t\tOther candidate distributions "
+            + "\n\t\t\tOther candidate distributions " + Arrays.toString(this.population.get_best_individuals_string())
             + "\n\n");
 
     }

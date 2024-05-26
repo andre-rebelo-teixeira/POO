@@ -11,7 +11,7 @@ all: clean compile jar
 
 compile:
 	@mkdir -p $(BIN_DIR)
-	$(foreach dir, $(SRC_DIRS), $(JAVAC) -d $(BIN_DIR) $(dir)/*.java;)
+	$(foreach dir, $(SRC_DIRS), $(JAVAC) -Xlint -d $(BIN_DIR) $(dir)/*.java;)
 
 jar: compile
 	@echo "Main-Class: $(MAIN_CLASS)" > $(MANIFEST)
