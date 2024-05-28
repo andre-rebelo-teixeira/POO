@@ -24,7 +24,7 @@ import population.PopulationInterface;
 
 public class SimulationHandler {
     // Event and Observation variables
-    private static final int PRINT_FREQUENCY = 20;
+    private static final int PRINT_FREQUENCY = 1;
 
     private final ExponentialDistributionInterface exp_distribution;
 
@@ -33,6 +33,8 @@ public class SimulationHandler {
     private int observationNumber;
     private int populationSize;
     private int numbEpidemics;
+    private int ev_count;
+    private float emp_police_time;
 
     private PEC event_container;
 
@@ -45,6 +47,8 @@ public class SimulationHandler {
         this.maxTime = simulation_data.getFinalInstance();
         this.presentInstant = 0;
         this.exp_distribution = new ExponentialDistribution(0.0);
+        this.ev_count = 0;
+        this.emp_police_time = 0;
 
         // start population
         this.population = new Population(simulation_data.getInitialPopulationSize(),
@@ -61,7 +65,7 @@ public class SimulationHandler {
         double time_counter = 0;
 
         // Create all the start event for this class
-/*
+
 
         // Create all the Death events
         for (Pair<Integer, Float> pair : conform_vector) {
@@ -69,7 +73,7 @@ public class SimulationHandler {
             double rand_time = exp_distribution.getExponentialRandom((float)1.0);
             this.event_container.addEvent(new DeathEvent(pair.getFirst(),  rand_time +  time_counter));
             time_counter += rand_time;
-        } */
+        } 
 
         // New Shuffle for the reproduction events
         Collections.shuffle(conform_vector);
@@ -87,7 +91,7 @@ public class SimulationHandler {
         Collections.shuffle(conform_vector);
         time_counter = 0;
         Random rand = new Random();
-/*
+
         for (Pair <Integer, Float> pair : conform_vector) {
             this.exp_distribution.setLambda(1 - Math.log(pair.getSecond()) * simulation_data.getSigma());
             double rand_time = exp_distribution.getExponentialRandom((float)1.0);
@@ -96,18 +100,30 @@ public class SimulationHandler {
                                                             rand.nextInt(this.simulation_data.get_numb_planets()) ));
             time_counter += rand_time;
         }
-*/
+
     }
 
     public void updateStats(){
         this.presentInstant++;
         this.observationNumber++;
         this.populationSize = this.population.get_population_size();
+        Map<String, Integer> event_counter = this.event_container.getEventCounter();
+        int all_event_counter = 0;
+        for (int i = 0; i < event_counter.size(); i++) {
+            String key = event_counter.keySet().toArray()[i].toString();
+            Integer count = event_counter.get(key);
+            all_event_counter += count;
+        }
+        this.ev_count = all_event_counter;   
+
+
+        if (this.simulation_data.get_max_individuals() <  this.population.get_population_size()) {
+            this.numbEpidemics += 1;
+        }     
+        this.emp_police_time = this.population.get_time_min();
     }
 
     // Increment time
-    // Request population step()
-    // create all events that come on event_vector
     public void start(){
         for (int i = 1; i <= maxTime; i++){
 
@@ -136,11 +152,6 @@ public class SimulationHandler {
 
             //  Individual with Comfort 1
 
-            updateStats();
-            if( i % PRINT_FREQUENCY == 0){
-                print_simulation_observation();
-            }
-
             //  Handle the events
             Queue<GenericEvent> events = this.event_container.getEventQueue(i);
             if (events == null) {
@@ -150,6 +161,11 @@ public class SimulationHandler {
             for (GenericEvent event : events) {
                 this.event_container.setEventCounter(event.handle(this.event_container.getEventCounter(), this.population, this.event_container));
             }
+            
+            updateStats();
+            if( i % PRINT_FREQUENCY == 0){
+                print_simulation_observation();
+            }            
         }
 
         print_simulation_observation();
@@ -167,17 +183,16 @@ public class SimulationHandler {
     }
 
     public void print_simulation_observation(){
-        Map<String, Integer> event_counter = this.event_container.getEventCounter();
-        Integer count = event_counter.values().iterator().next();
+
 
 
         System.out.println("Observation "+ this.observationNumber +": "
             + "\n\t\t\tPresent Instant: " + this.presentInstant
-            + "\n\t\t\tNumber of realized events: " + count
+            + "\n\t\t\tNumber of realized events: " + this.ev_count
             + "\n\t\t\tPopulation size: " + this.populationSize
             + "\n\t\t\tNumber of epidemics: " + this.numbEpidemics
             + "\n\t\t\tBest distribution of the patrols: " 
-            + "\n\t\t\tEmpire policing time: " + this.population.get_time_min()
+            + "\n\t\t\tEmpire policing time: " + this.emp_police_time
             + "\n\t\t\tComfort: " + 0 // change latter
             + "\n\t\t\tOther candidate distributions " + Arrays.toString(this.population.get_best_individuals_string())
             + "\n\n");
