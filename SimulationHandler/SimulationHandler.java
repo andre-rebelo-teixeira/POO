@@ -136,11 +136,6 @@ public class SimulationHandler {
 
             //  Individual with Comfort 1
 
-
-
-
-
-
             updateStats();
             if( i % PRINT_FREQUENCY == 0){
                 print_simulation_observation();

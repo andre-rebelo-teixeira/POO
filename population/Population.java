@@ -4,6 +4,7 @@ import ExponentialDistribution.ExponentialDistribution;
 import ExponentialDistribution.ExponentialDistributionInterface;
 import Pair.Pair;
 
+import java.sql.Array;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Population implements PopulationInterface, Observer {
 	private float t_min;
 	private Boolean optimal_solution;
 
-    private HashMap<Integer, Float> comfort_map;
+    private ArrayList<Pair<Integer, Float>> comfort_map;
 	private ExponentialDistributionInterface expo_random;
 
     public Population(Integer size,
@@ -41,7 +42,7 @@ public class Population implements PopulationInterface, Observer {
 		this.optimal_solution = false;
 		this.current_id = -1;
         this.compute_min_time();
-		this.comfort_map = new HashMap<>();
+		this.comfort_map = new ArrayList<>();
 
         IndividualComparator individualComparator = new IndividualComparator();
 
@@ -53,8 +54,8 @@ public class Population implements PopulationInterface, Observer {
 					this.t_min );
 
 			// Add Data to the individuals
-			ind.create_random_patrol_distribution();
 			ind.add_observer(this);
+			ind.create_random_patrol_distribution();
 
 			// Add individuals to where they should be
 			this.individuals.put(ind.id, ind);
@@ -149,12 +150,7 @@ public class Population implements PopulationInterface, Observer {
 
 	@Override
 	public ArrayList<Pair<Integer, Float>> get_comfort_vector() {
-		ArrayList<Pair<Integer, Float>> comfort_vector = new ArrayList<>();
-
-		for (Individual individual : this.individuals.values()) {
-			comfort_vector.add(new Pair<>(individual.getId() , this.t_min / individual.get_max_patrol_time()  ));
-		}
-		return comfort_vector;
+		return this.comfort_map;
 	}
 
 	@Override
@@ -232,14 +228,24 @@ public class Population implements PopulationInterface, Observer {
 	@Override
 	public void update(int individualId, float comfortValue) {
 		System.out.println("individual ID " + individualId + " " +  comfortValue);
-		Individual ind = this.individuals.get(individualId);
 
-		this.comfort_map.remove(individualId);
-		this.comfort_map.put(individualId, comfortValue);
+		Pair<Integer, Float> new_pair = new Pair<Integer, Float>(individualId, comfortValue);
 
 		if (comfortValue == 1) {
 			this.optimal_solution = true;
 		}
+
+		// Remove old value from the map
+		for (Pair <Integer, Float> pair : this.comfort_map) {
+			if (pair.getFirst() == individualId) {
+				this.comfort_map.remove(pair); // remove previous pair
+				break;
+			}
+		}
+
+		//  Add new value to the map
+		this.comfort_map.add(new Pair<Integer,Float>(individualId, comfortValue));
+		return;
 	}
 
 
