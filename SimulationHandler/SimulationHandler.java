@@ -61,6 +61,7 @@ public class SimulationHandler {
         double time_counter = 0;
 
         // Create all the start event for this class
+/*
 
         // Create all the Death events
         for (Pair<Integer, Float> pair : conform_vector) {
@@ -68,7 +69,7 @@ public class SimulationHandler {
             double rand_time = exp_distribution.getExponentialRandom((float)1.0);
             this.event_container.addEvent(new DeathEvent(pair.getFirst(),  rand_time +  time_counter));
             time_counter += rand_time;
-        }
+        } */
 
         // New Shuffle for the reproduction events
         Collections.shuffle(conform_vector);
@@ -86,7 +87,7 @@ public class SimulationHandler {
         Collections.shuffle(conform_vector);
         time_counter = 0;
         Random rand = new Random();
-
+/*
         for (Pair <Integer, Float> pair : conform_vector) {
             this.exp_distribution.setLambda(1 - Math.log(pair.getSecond()) * simulation_data.getSigma());
             double rand_time = exp_distribution.getExponentialRandom((float)1.0);
@@ -95,6 +96,7 @@ public class SimulationHandler {
                                                             rand.nextInt(this.simulation_data.get_numb_planets()) ));
             time_counter += rand_time;
         }
+*/
     }
 
     public void updateStats(){
@@ -154,6 +156,8 @@ public class SimulationHandler {
                 this.event_container.setEventCounter(event.handle(this.event_container.getEventCounter(), this.population, this.event_container));
             }
         }
+
+        print_simulation_observation();
 
         Map<String, Integer> event_counter = this.event_container.getEventCounter();
         for (int i = 0; i < event_counter.size(); i++) {

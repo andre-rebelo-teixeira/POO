@@ -6,6 +6,7 @@ import java.util.*;
 class Individual {
     private int number_of_planetary_systems;
     private int number_of_patrols;
+    private HashMap <Integer, Integer> planet_patrol;
     private ArrayList<Observer> observers;
 
 	private float random;
@@ -27,16 +28,17 @@ class Individual {
         this.cost_matrix = i.cost_matrix;
         this.t_min = i.t_min;
         this.observers = i.observers;
+        this.planet_patrol = i.planet_patrol;
 
         this.patrol_list = new ArrayList<>();
         this.planet_list = new ArrayList<>();
 
         for(PlanetarySystem p :  i.planet_list) {
-            this.planet_list.add(p);
+            this.planet_list.add(new PlanetarySystem(p));
         }
 
         for (Patrol p : i.patrol_list) {
-            this.patrol_list.add(p);
+            this.patrol_list.add(new Patrol(p));
         }
     }
 
@@ -48,6 +50,7 @@ class Individual {
         this.rand = new Random();
         this.t_min = t_min;
         this.observers = new ArrayList<>();
+        this.planet_patrol = new HashMap<>();
 
         this.patrol_list = new ArrayList<Patrol>();
         this.planet_list = new ArrayList<PlanetarySystem>();
@@ -83,7 +86,11 @@ class Individual {
         for (int i = 0; i < this.number_of_planetary_systems; i++){
             int patrol = rand.nextInt(this.number_of_patrols);  
             this.patrol_list.get(patrol).patrol_new_planet(i, planet_list.get(i));
+            this.planet_patrol.put(i, patrol);
+
         }
+
+        this.notify_observers();
     }
 
     public void  change_distribution(Integer number_changes) {
@@ -96,18 +103,40 @@ class Individual {
 
         // iterate through all the number of changes we need to do and calculate a new patrol for them
         for (int i = 0; i < number_changes; i++) {
-            int planetary_system = this.rand.nextInt(all_planetary_systems.size());
-            all_planetary_systems.remove(planetary_system);
-            this.assign_planetary_system_to_random_patrol(planetary_system);
+            // Get a new planetary system from a random index
+            int planetary_system_index = this.rand.nextInt(all_planetary_systems.size() - 1);
+            all_planetary_systems.remove(planetary_system_index);
+
+            int planetary_system = all_planetary_systems.get(planetary_system_index);
+
+            //  get the patrol that patrols that planets
+            Patrol p = this.patrol_list.get(this.planet_patrol.get(planetary_system));
+            p.remove_planet_to_patrol(planetary_system);
+
+            this.assign_planetary_system_to_random_patrol(planetary_system, p.getId());
         }
+        this.notify_observers();
     }
 
-	public void assign_planetary_system_to_random_patrol(int planetary_system) {
-        Random rand = new Random();
-        int patrol = rand.nextInt(this.number_of_patrols);
+	public void assign_planetary_system_to_random_patrol(int planetary_system, int prev_patrol_id) {
+        int counter = 0;
+        int new_patrol_id = prev_patrol_id;
+        new_patrol_id = rand.nextInt(this.number_of_patrols);
 
-        this.patrol_list.get(patrol).patrol_new_planet(planetary_system, planet_list.get(planetary_system));
-        return;
+        if (new_patrol_id == prev_patrol_id) {
+            if (new_patrol_id == 0) {
+                new_patrol_id++;
+            }
+            else if (new_patrol_id == this.number_of_patrols - 1) {
+                new_patrol_id--;
+            }
+            else {
+                new_patrol_id /= 2;
+            }
+        }
+
+        this.patrol_list.get(new_patrol_id).patrol_new_planet(planetary_system, planet_list.get(planetary_system));
+        this.planet_patrol.put(planetary_system, new_patrol_id);
     }
 
 	public float get_comfort_level() {

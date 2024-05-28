@@ -41,6 +41,7 @@ public class Population implements PopulationInterface, Observer {
 		this.optimal_solution = false;
 		this.current_id = -1;
         this.compute_min_time();
+		this.comfort_map = new HashMap<>();
 
         IndividualComparator individualComparator = new IndividualComparator();
 
@@ -230,6 +231,7 @@ public class Population implements PopulationInterface, Observer {
 
 	@Override
 	public void update(int individualId, float comfortValue) {
+		System.out.println("individual ID " + individualId + " " +  comfortValue);
 		Individual ind = this.individuals.get(individualId);
 
 		this.comfort_map.remove(individualId);

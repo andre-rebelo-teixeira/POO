@@ -58,5 +58,9 @@ class Patrol {
 		return patrol_info.toString();
 
 	}
+
+	public Integer getId() {
+		return id;
+	}
 }
 
