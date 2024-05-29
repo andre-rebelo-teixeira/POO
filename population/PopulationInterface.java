@@ -26,6 +26,8 @@ public interface PopulationInterface {
 
     public Boolean get_optimal_solution_found();
 
+    public Pair <Float, String> get_best_individual_values();
+
     public String[] get_best_individuals_string();
 
     public void start_new_epidemic();

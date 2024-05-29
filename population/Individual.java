@@ -216,8 +216,6 @@ class Individual {
         node_info.append(String.valueOf(this.get_max_patrol_time()));
         node_info.append(" : ");
         node_info.append(String.valueOf(this.get_comfort_level()));
-        node_info.append("  ");
-        node_info.append(String.valueOf(this.id));
         return node_info.toString();
     }
 

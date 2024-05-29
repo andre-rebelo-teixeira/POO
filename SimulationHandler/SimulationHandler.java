@@ -185,17 +185,22 @@ public class SimulationHandler {
     public void print_simulation_observation(){
 
 
+        String[] best_individual_string = this.population.get_best_individuals_string();
 
         System.out.println("Observation "+ this.observationNumber +": "
             + "\n\t\t\tPresent Instant: " + this.presentInstant
             + "\n\t\t\tNumber of realized events: " + this.ev_count
             + "\n\t\t\tPopulation size: " + this.populationSize
             + "\n\t\t\tNumber of epidemics: " + this.numbEpidemics
-            + "\n\t\t\tBest distribution of the patrols: " 
-            + "\n\t\t\tEmpire policing time: " + this.emp_police_time
-            + "\n\t\t\tComfort: " + 0 // change latter
-            + "\n\t\t\tOther candidate distributions " + Arrays.toString(this.population.get_best_individuals_string())
-            + "\n\n");
+            + "\n\t\t\tBest distribution of the patrols: " + this.population.get_best_individual_values().getSecond().split(":")[0]
+            + "\n\t\t\tEmpire policing time: " + this.population.get_time_min()
+            + "\n\t\t\tComfort: " + this.population.get_best_individual_values().getFirst()
+            + "\n\t\t\tOther candidate distributions: " + best_individual_string[0]);
 
+        for (int i = 1 ; i < best_individual_string.length; i++) {
+            System.out.println("\t\t\t" + "                               " + best_individual_string[i]);
+        }
+
+        System.out.print("\n\n");
     }
 }

@@ -1,51 +1,79 @@
 package FixedSizePriorityQueue;
 
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Comparator;
+import java.util.PrimitiveIterator;
+import java.util.PriorityQueue;
 
 public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterface<E> {
     private final PriorityQueue<E> queue;
     private final int maxSize;
-    private final Comparator<? super E> comparator;
+    private int currentSize;
 
     public FixedSizePriorityQueue(int maxSize, Comparator<? super E> comparator) {
         if (maxSize <= 0) {
             throw new IllegalArgumentException("Max size must be greater than 0");
         }
-        this.queue = new PriorityQueue<>(maxSize, comparator);
+        this.queue = new PriorityQueue<>(comparator);
         this.maxSize = maxSize;
-        this.comparator = comparator;
+        this.currentSize = 0;
     }
 
     @Override
     public boolean add(E e) {
-        if (queue.size() < maxSize) {
-            queue.add(e);
-        } else if (comparator.compare(e, queue.peek()) > 0) {
-            queue.poll();
-            queue.add(e);
-        } else {
-            return false;
+        this.currentSize = this.currentSize == this.maxSize ? this.maxSize : this.currentSize + 1;
+        return this.queue.add(e);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        for (E e : c) {
+            if (!this.add(e)) {
+                return false; 
+            }
         }
         return true;
     }
 
     @Override
     public E peek() {
+        if (this.currentSize == 0) {
+            return null;
+        }
         return queue.peek();
     }
 
     @Override
     public E poll() {
+        if (this.currentSize == 0) {
+            return null;
+        }
+        this.currentSize--;
+
         return queue.poll();
+
+    }
+
+    @Override
+    public PriorityQueue<E> poll(Integer n) {
+        PriorityQueue<E> pq = new PriorityQueue<>(n);
+
+        for (int i = 0; i < n && this.queue.peek() != null; i++) {
+            pq.offer(this.queue.poll());
+        }
+
+        return pq;
+    }
+
+    @Override
+    public PriorityQueue<E> getAll() {
+        return this.poll(this.maxSize);
     }
 
     @Override
     public int size() {
-        return queue.size();
+        return currentSize;
     }
 
     @Override
@@ -53,6 +81,7 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
         return maxSize;
     }
 
+    /*
     @Override
     public boolean isFull() {
         return queue.size() == maxSize;
@@ -60,13 +89,18 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        boolean modified = false;
+        PriorityQueue<E> q = new PriorityQueue<>(maxSize, comparator);
+
         for (E e : c) {
-            if (add(e)) {
-                modified = true;
+            q.offer(e);
+        }
+
+        for (int i = 0; i < this.maxSize && q.peek() != null; i++) {
+            if (!this.add(q.poll())) {
+                return false;
             }
         }
-        return modified;
+        return true;
     }
 
     @Override
@@ -118,5 +152,7 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
     public <T> T[] toArray(T[] a) {
         return queue.toArray(a);
     }
+*/
 }
+
 

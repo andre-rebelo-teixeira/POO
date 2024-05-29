@@ -175,7 +175,7 @@ public class Population implements PopulationInterface, Observer {
 		ArrayList<Individual> temp = new ArrayList<>();
 		FixedSizePriorityQueueInterface<Individual> best_individuals = this.create_priority_queue(5);
 
-		while(!best_individuals.isEmpty() && best_individuals.peek() != null) {
+		while(best_individuals.peek() != null) {
 			Individual ind = best_individuals.poll();
 			temp.add(ind);
 			individual_ids.remove(ind.getId());
@@ -188,7 +188,6 @@ public class Population implements PopulationInterface, Observer {
 		for (Integer individual_id : individual_ids) {
 			System.out.println("individual_id " + individual_id);
 			Individual ind = this.individuals.get(individual_id);
-
 
 			if (! (2.0 / 3.0 * ind.get_comfort_level() * 100 < rand.nextDouble(0, 100))) {
 				remove_individual_ids.add(individual_id);
@@ -207,15 +206,16 @@ public class Population implements PopulationInterface, Observer {
 	@Override
 	public String[] get_best_individuals_string() {
 		ArrayList<Individual> temp = new ArrayList<>();
-		FixedSizePriorityQueueInterface<Individual> best_individuals = this.create_priority_queue(5);
+		FixedSizePriorityQueueInterface<Individual> best_individuals = this.create_priority_queue(6);
+		best_individuals.poll(); // Remove the first
 
 		String [] best_individuals_string = new String[best_individuals.size()];
 
 		int counter = 0;
-		while(!best_individuals.isEmpty() && best_individuals.peek() != null) {
+		while(best_individuals.peek() != null) {
 			Individual ind = best_individuals.poll();
-			best_individuals_string[counter] = ind.get_information_string();
-			System.out.println("Val : " + best_individuals_string[counter]);
+			best_individuals_string[counter++] = ind.get_information_string();
+			System.out.println("counter - " + counter + "  " + ind.get_comfort_level());
 		}
 		return best_individuals_string;
 	}
@@ -223,6 +223,17 @@ public class Population implements PopulationInterface, Observer {
 	@Override
 	public Float get_time_min() {
 		return this.t_min;
+	}
+
+	@Override
+	public Pair<Float, String> get_best_individual_values() {
+		IndividualComparator individualComparator = new IndividualComparator();
+		FixedSizePriorityQueueInterface<Individual> q  = this.create_priority_queue(2);
+
+		if(q.peek() != null) {
+			return new Pair<Float, String>(q.peek().get_comfort_level(), q.peek().get_information_string());
+		}
+		return new Pair<Float, String>((float)-1.0, "");
 	}
 
 	@Override
@@ -284,8 +295,11 @@ public class Population implements PopulationInterface, Observer {
 
 		// Maybe change for q.addAll in the future
 		for (Individual individual : this.individuals.values()) {
-			System.out.print(individual.id + " ");
-			q.add(individual);
+			if (q.peek()!= null)
+			System.out.print(q.peek().get_comfort_level() + " " + q.peek().getId());
+			boolean return_val = q.add(individual);
+			System.out.println(" " + individual.get_comfort_level() + " " + individual.getId() + " " + return_val + "\n");
+
 		}
 		System.out.println();
 
