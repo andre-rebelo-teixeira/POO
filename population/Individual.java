@@ -212,6 +212,7 @@ class Individual {
             node_info.append(patrol.get_patrolled_planets());
             node_info.append("},");
         }
+        node_info.deleteCharAt(node_info.length() - 1);
         node_info.append("} : ");
         node_info.append(String.valueOf(this.get_max_patrol_time()));
         node_info.append(" : ");

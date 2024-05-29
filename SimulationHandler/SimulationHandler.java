@@ -191,6 +191,8 @@ public class SimulationHandler {
             best_individual_string = new String[]{"<No individual to show here2>"};
         }
 
+
+
         System.out.println("Observation "+ this.observationNumber +": "
             + "\n\t\t\tPresent Instant: " + this.presentInstant
             + "\n\t\t\tNumber of realized events: " + this.ev_count
