@@ -184,8 +184,12 @@ public class SimulationHandler {
 
     public void print_simulation_observation(){
 
-
         String[] best_individual_string = this.population.get_best_individuals_string();
+        // No individuals
+        if (best_individual_string.length == 0) {
+
+            best_individual_string = new String[]{"<No individual to show here2>"};
+        }
 
         System.out.println("Observation "+ this.observationNumber +": "
             + "\n\t\t\tPresent Instant: " + this.presentInstant
