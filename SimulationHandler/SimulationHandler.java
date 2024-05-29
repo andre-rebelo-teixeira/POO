@@ -24,7 +24,7 @@ import population.PopulationInterface;
 
 public class SimulationHandler {
     // Event and Observation variables
-    private static final int PRINT_FREQUENCY = 1;
+    private static final int PRINT_FREQUENCY = 20;
 
     private final ExponentialDistributionInterface exp_distribution;
 
@@ -130,7 +130,6 @@ public class SimulationHandler {
             // check end conditions
             // No more events in the PEc
             if (this.event_container.get_num_events() == 0) {
-                System.out.println("Out of events");
                 break;
             }
 
@@ -203,7 +202,7 @@ public class SimulationHandler {
             + "\n\t\t\tComfort: " + this.population.get_best_individual_values().getFirst()
             + "\n\t\t\tOther candidate distributions: " + best_individual_string[0]);
 
-        for (int i = 1 ; i < best_individual_string.length; i++) {
+        for (int i = 1 ; i < best_individual_string.length && i < 5; i++) {
             System.out.println("\t\t\t" + "                               " + best_individual_string[i]);
         }
 

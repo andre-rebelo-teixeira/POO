@@ -141,10 +141,7 @@ public class Population implements PopulationInterface, Observer
         if ( ind != null )
         {
             Individual new_ind = new Individual( ind, new_id );
-            System.out.println( "Prev individual " + individual_id + " new individual " + new_id );
             this.individuals.put( new_id, new_ind );
-
-
             return new_id;
         }
 
@@ -214,7 +211,6 @@ public class Population implements PopulationInterface, Observer
 
         for ( Integer individual_id : individual_ids )
         {
-            System.out.println( "individual_id " + individual_id );
             Individual ind = this.individuals.get( individual_id );
 
             if ( ! ( 2.0 / 3.0 * ind.get_comfort_level() * 100 < rand.nextDouble( 0, 100 ) ) )
@@ -226,11 +222,8 @@ public class Population implements PopulationInterface, Observer
         for ( Integer individual_id : remove_individual_ids )
         {
             this.individuals.remove( individual_id );
-            System.out.println( "removed individual " + individual_id );
         }
 
-        System.out.println( "Ended epidemic with " + this.individuals.size() );
-        System.out.println( "Ended epidemic with " + this.individuals.size() );
     }
 
     @Override
@@ -250,7 +243,6 @@ public class Population implements PopulationInterface, Observer
         {
             Individual ind = best_individuals.poll();
             best_individuals_string[counter++] = ind.get_information_string();
-            System.out.println( "counter - " + counter + "  " + ind.get_comfort_level() );
         }
         return best_individuals_string;
     }
@@ -270,8 +262,6 @@ public class Population implements PopulationInterface, Observer
     @Override
     public void update( int individualId, float comfortValue )
     {
-        System.out.println( "individual ID " + individualId + " " + comfortValue );
-
         if ( this.best_individual_info.getFirst() < comfortValue )
         {
             Individual ind;
@@ -341,12 +331,7 @@ public class Population implements PopulationInterface, Observer
         // Maybe change for q.addAll in the future
         for ( Individual individual : this.individuals.values() )
         {
-            if ( q.peek() != null )
-                System.out.print( q.peek().get_comfort_level() + " " + q.peek().getId() );
-            boolean return_val = q.add( individual );
-            System.out.println(
-                    " " + individual.get_comfort_level() + " " + individual.getId() + " " + return_val + "\n" );
-
+            q.add( individual );
         }
         System.out.println();
 
