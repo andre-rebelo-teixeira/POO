@@ -1,6 +1,7 @@
 package SimulationHandler;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import ExponentialDistribution.ExponentialDistributionInterface;
 import ExponentialDistribution.ExponentialDistribution;
@@ -237,8 +238,12 @@ public class SimulationHandler implements SimulationHandlerInterface {
                 break;
             }
             if (this.simulation_data.get_max_individuals() < this.population.get_population_size()) {
-                this.population.start_new_epidemic();
+                ArrayList<Integer> removed_ids = this.population.start_new_epidemic();
                 this.numbEpidemics++;
+                for(Integer j : removed_ids) {
+                    Predicate<GenericEvent> predicate_events = event -> event.getIndividual_id().equals( j );
+                    this.event_container.removeEvents( predicate_events );
+                }
             }
 
             // Handle the events

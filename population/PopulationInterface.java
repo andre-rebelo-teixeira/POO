@@ -135,8 +135,10 @@ public interface PopulationInterface {
      * Starts a new epidemic within the population.
      * This method triggers the beginning of a new epidemic event in the population
      * simulation.
+     *
+     * @return  An Array with the ids of the individuals that dies during the epidemic
      */
-    public void start_new_epidemic();
+    public ArrayList<Integer> start_new_epidemic();
 
     /**
      * Gets the minimum time value.

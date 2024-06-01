@@ -280,9 +280,11 @@ public class Population implements PopulationInterface, Observer {
 
     /**
      * Starts a new epidemic among the individuals.
+     *
+     * @return  An Array with the ids of the individuals that dies during the epidemic
      */
     @Override
-    public void start_new_epidemic() {
+    public ArrayList<Integer> start_new_epidemic() {
         System.out.println("Started an epidemic with " + this.individuals.size());
         ArrayList<Integer> individual_ids = new ArrayList<>();
 
@@ -312,6 +314,7 @@ public class Population implements PopulationInterface, Observer {
         for (Integer individual_id : remove_individual_ids) {
             this.individuals.remove(individual_id);
         }
+        return remove_individual_ids;
     }
 
     /**
