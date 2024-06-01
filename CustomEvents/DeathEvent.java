@@ -2,6 +2,7 @@ package CustomEvents;
 
 import Event.PEC;
 import Event.GenericEvent;
+import Event.EventContainer;
 import population.PopulationInterface;
 import java.util.function.Predicate;
 import Pair.Pair;
@@ -22,8 +23,13 @@ import Pair.Pair;
  * @author André Rebelo Teixeira
  */
 public class DeathEvent extends GenericEvent {
-    private final Predicate<GenericEvent> remove_events;
 
+    /**
+     * A predicate used to filter and remove events related to the individual who is dying.
+     * This predicate checks if the event's individual ID matches the ID of this death event.
+     */
+    private final Predicate<GenericEvent> remove_events;
+    
     /**
      * Constructor for DeathEvent.
      *
@@ -65,7 +71,7 @@ public class DeathEvent extends GenericEvent {
      * @return A pair containing the updated population interface and the pending event container.
      */
     @Override
-    public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
+    public Pair<PopulationInterface, EventContainer> handle(PopulationInterface population, EventContainer pec) {
         pec.removeEvents(remove_events);
         population.remove_one_individual(this.getIndividual_id());
         pec.setEventCounter(this.update_event_counter(pec.getEventCounter()));

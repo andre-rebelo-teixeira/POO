@@ -29,7 +29,14 @@ import java.util.function.Predicate;
  * @since version 1.0
  */
 public class PEC implements EventContainer {
+    /**
+     * Priority Queue for events
+     */
     private final PriorityQueue<GenericEvent> event_queue;
+
+    /**
+     * Map used to count how many events of each type have happened
+     */
     private Map<String, Integer> EventCounter;
 
     /**

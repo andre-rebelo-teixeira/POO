@@ -9,19 +9,62 @@ import java.util.*;
  * This class supports creating random patrol distributions, changing distributions, and notifying observers.
  */
 class Individual {
+    /**
+     * The number of planetary systems associated with this individual.
+     */
     private int number_of_planetary_systems;
+
+    /**
+     * The number of patrols associated with this individual.
+     */
     private int number_of_patrols;
+
+    /**
+     * A map associating each planet's ID to the patrol that patrols it.
+     * The key is the planet ID and the value is the patrol ID.
+     */
     private HashMap<Integer, Integer> planet_patrol;
+
+    /**
+     * A list of observers that monitor changes to this individual.
+     */
     private ArrayList<Observer> observers;
 
+    /**
+     * A random float value associated with this individual.
+     */
     private float random;
+
+    /**
+     * An instance of the Random class used for generating random numbers.
+     */
     Random rand;
 
+    /**
+     * A list of patrol objects associated with this individual.
+     */
     private ArrayList<Patrol> patrol_list;
+
+    /**
+     * A list of planetary system objects associated with this individual.
+     */
     private ArrayList<PlanetarySystem> planet_list;
 
+    /**
+     * A cost matrix representing the cost of each patrol for each planetary system.
+     * The first dimension represents patrols and the second dimension represents planetary systems.
+     */
     int[][] cost_matrix;
+
+    /**
+     * The unique ID of this individual.
+     */
     Integer id;
+
+    /**
+     * The minimum time for comfort level calculation.
+     * This value is final and cannot be changed once set.
+     */
     final Float t_min;
 
     /**

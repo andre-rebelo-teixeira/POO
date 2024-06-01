@@ -21,7 +21,15 @@ import java.util.Random;
  * @author André Rebelo Teixeira
  */
 public class ExponentialDistribution implements ExponentialDistributionInterface {
+    /**
+     * The mean parameter of the exponential distribution.
+     */
     private double mean = 0.0f;
+
+    /**
+     * An instance of the Random class used for generating random numbers.
+     * This variable is final, indicating that it cannot be reassigned.
+     */
     private final Random rand = new Random();
 
     /**

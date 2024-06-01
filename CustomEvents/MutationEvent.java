@@ -3,6 +3,7 @@ package CustomEvents;
 import Pair.Pair;
 import Event.GenericEvent;
 import Event.PEC;
+import Event.EventContainer;
 import java.util.Random;
 import population.PopulationInterface;
 import ExponentialDistribution.ExponentialDistributionInterface;
@@ -24,8 +25,20 @@ import ExponentialDistribution.ExponentialDistributionInterface;
  *
  */
 public class MutationEvent extends GenericEvent {
+
+    /**
+     * The number of planets affecting the genetic distribution.
+     */
     private final Integer num_planets;
+
+    /**
+     * The parameter influencing the handling time of the event.
+     */
     private final Integer delta;
+
+    /**
+     * The exponential distribution interface for calculating event times.
+     */
     private final ExponentialDistributionInterface exp;
 
     /**
@@ -73,7 +86,7 @@ public class MutationEvent extends GenericEvent {
      * @return A pair containing the updated population interface and the pending event container.
      */
     @Override
-    public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
+    public Pair<PopulationInterface, EventContainer> handle(PopulationInterface population, EventContainer pec) {
         Random rand = new Random();
         population.change_distribution_of_individual(this.individual_id, rand.nextInt(this.num_planets));
 

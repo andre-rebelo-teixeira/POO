@@ -8,8 +8,21 @@ import population.PlanetarySystem;
  * Each patrol has a unique ID, a set of patrolled planetary systems, and an array of patrol times.
  */
 class Patrol {
+
+	/**
+	 * The unique ID of the patrol.
+	 */
 	private Integer id;
+
+	/**
+	 * A map associating each planetary system's ID to the planetary system being patrolled.
+	 * The key is the planetary system ID and the value is the PlanetarySystem object.
+	 */
 	private HashMap<Integer, PlanetarySystem> patrolled_planetary_systems;
+
+	/**
+	 * An array representing the patrol time for each planetary system.
+	 */
 	private Integer[] patrol_time;
 
 	/**

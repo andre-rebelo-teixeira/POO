@@ -96,7 +96,7 @@ public abstract class GenericEvent {
 	 * @return A pair containing the updated population interface and the pending
 	 *         event container.
 	 */
-	public abstract Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec);
+	public abstract Pair<PopulationInterface, EventContainer> handle(PopulationInterface population, EventContainer pec);
 
 	/**
 	 * Gets the ID of the individual affected by the event.

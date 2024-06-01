@@ -26,28 +26,59 @@ import java.util.Random;
  */
 public class SimulationData implements SimulationDataInterface {
 
+    /**
+     * Exponential distribution object for generating random numbers.
+     */
     private ExponentialDistribution exponentialDistribution;
 
-    // Input file location
+    /**
+     * Path to the input file containing simulation parameters.
+     */
     private String file_path;
 
-    // Cost matrix containing times for policing the planetary systems
+    /**
+     * Matrix representing the costs for policing the planetary systems.
+     */
     private int[][] costMatrix;
 
-    // Number of patrols and planets
+    /**
+     * Number of patrols in the simulation.
+     */
     private int n;
+
+    /**
+     * Number of planets in the simulation.
+     */
     private int m;
 
-    // Final instant of evolution
+    /**
+     * Final instant of the simulation evolution.
+     */
     private int tau;
 
-    // Initial and maximum population, respectively
+    /**
+     * Initial population size.
+     */
     private int v;
+
+    /**
+     * Maximum population size.
+     */
     private int v_max;
 
-    // Death, reproduction, and mutation, respectively
+    /**
+     * Death rate parameter for the simulation.
+     */
     private int mu;
+
+    /**
+     * Reproduction rate parameter for the simulation.
+     */
     private int sigma;
+
+    /**
+     * Mutation rate parameter for the simulation.
+     */
     private int phi;
 
     /**

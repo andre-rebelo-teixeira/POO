@@ -13,6 +13,7 @@ import java.util.*;
  * tracking comfort levels and optimal solutions.
  */
 public class Population implements PopulationInterface, Observer {
+
     /**
      * Stores the Individual objects in the population.
      */
@@ -80,7 +81,7 @@ public class Population implements PopulationInterface, Observer {
     public Population(Integer size, Integer number_of_planetary_systems, Integer number_of_patrols, int[][] cost_matrix) {
         this.number_of_planetary_systems = number_of_planetary_systems;
         this.expo_random = new ExponentialDistribution(0.0);
-        Vector<Integer> plannetary_system_vec = new Vector<>();
+        Vector<Integer> planetary_system_vec = new Vector<>();
         this.number_of_patrols = number_of_patrols;
         this.individuals = new HashMap<>();
         this.cost_matrix = cost_matrix;
@@ -108,7 +109,7 @@ public class Population implements PopulationInterface, Observer {
         }
 
         for (int i = 0; i < this.number_of_planetary_systems; i++) {
-            plannetary_system_vec.add(i);
+            planetary_system_vec.add(i);
         }
     }
 
@@ -258,7 +259,7 @@ public class Population implements PopulationInterface, Observer {
             }
         }
 
-        Individual ind = this.individuals.getOrDefault( individual_id, null );
+        Individual ind = this.individuals.getOrDefault(individual_id, null);
 
         if (ind != null) {
             return this.t_min / ind.get_max_patrol_time();
@@ -321,18 +322,18 @@ public class Population implements PopulationInterface, Observer {
     @Override
     public String[] get_best_individuals_string() {
         ArrayList<Individual> temp = new ArrayList<>();
-        PriorityQueue<Individual> best_individuals = this.create_priority_queue( 6);
+        PriorityQueue<Individual> best_individuals = this.create_priority_queue(6);
         String[] best_individuals_string = new String[5];
         int counter = 0;
-        best_individuals_string[counter++ ] = best_individual_info.second();
+        best_individuals_string[counter++] = best_individual_info.second();
 
-        while(best_individuals.peek() != null && counter  < 5) {
+        while (best_individuals.peek() != null && counter < 5) {
             Individual ind = best_individuals.poll();
-            if (!Objects.equals( this.best_individual_info.second(), ind.get_information_string() )){
+            if (!Objects.equals(this.best_individual_info.second(), ind.get_information_string())) {
                 best_individuals_string[counter++] = ind.get_information_string();
             }
         }
-        
+
         return best_individuals_string;
     }
 
@@ -427,8 +428,7 @@ public class Population implements PopulationInterface, Observer {
         PriorityQueue<Individual> q = new PriorityQueue<Individual>(individualComparator);
         ArrayList<Individual> temp = new ArrayList<>();
 
-
-        q_.addAll( this.individuals.values() );
+        q_.addAll(this.individuals.values());
 
         while (!q_.isEmpty() && q_.peek() != null) {
             Individual individual = q_.poll();

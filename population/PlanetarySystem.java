@@ -17,6 +17,9 @@ import java.util.Objects;
  *
  */
 final class PlanetarySystem {
+	/**
+	 * Id of the planetary system
+	 */
 	private final Integer id;
 
 	/**

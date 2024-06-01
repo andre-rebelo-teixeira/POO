@@ -15,6 +15,7 @@ import population.Population;
 // Generic event and PEC
 import Event.GenericEvent;
 import Event.PEC;
+import Event.EventContainer;
 
 // Import custom Events
 import CustomEvents.ReproductionEvent;
@@ -33,7 +34,7 @@ import population.PopulationInterface;
  *
  * @version 1.0
  * @since 1.0
- *        a * @see population.Population
+ * @see population.Population
  * @see Event.GenericEvent
  * @see Event.PEC
  * @see CustomEvents.ReproductionEvent
@@ -44,19 +45,65 @@ import population.PopulationInterface;
  */
 public class SimulationHandler implements SimulationHandlerInterface {
     // Event and Observation variables
+
+    /**
+     * The frequency at which to print updates during the simulation.
+     */
     private static final int PRINT_FREQUENCY = 20;
 
+    /**
+     * The exponential distribution interface used in the simulation.
+     */
     private final ExponentialDistributionInterface exp_distribution;
+
+    /**
+     * The maximum time for the simulation.
+     */
     private final int maxTime;
+
+    /**
+     * The current instant of time in the simulation.
+     */
     private int presentInstant;
+
+    /**
+     * The number of observations made during the simulation.
+     */
     private int observationNumber;
+
+    /**
+     * The size of the population in the simulation.
+     */
     private int populationSize;
+
+    /**
+     * The number of epidemics that have occurred during the simulation.
+     */
     private int numbEpidemics;
+
+    /**
+     * The count of events that have occurred in the simulation.
+     */
     private int ev_count;
+
+    /**
+     * The empirical police time used in the simulation.
+     */
     private float emp_police_time;
 
-    private PEC event_container;
+    /**
+     * The event container that holds and manages events in the simulation.
+     */
+    private EventContainer event_container;
+
+    /**
+     * The interface for managing simulation data.
+     */
     private SimulationDataInterface simulation_data;
+
+    /**
+     * The interface representing the population in the simulation.
+     */
     private PopulationInterface population;
 
     /**
@@ -81,15 +128,15 @@ public class SimulationHandler implements SimulationHandlerInterface {
         // Start the event container
         this.event_container = new PEC();
 
-        ArrayList<Pair<Integer, Float>> conform_vector = this.population.get_comfort_vector();
-        Collections.shuffle(conform_vector);
+        ArrayList<Pair<Integer, Float>> comfort_vector = this.population.get_comfort_vector();
+        Collections.shuffle(comfort_vector);
 
         double time_counter = 0;
 
         // Create all the start events for this class
 
         // Create all the Death events
-        for (Pair<Integer, Float> pair : conform_vector) {
+        for (Pair<Integer, Float> pair : comfort_vector) {
             GenericEvent e = new DeathEvent(pair.first(), this.simulation_data.getMu());
             this.exp_distribution.setMean(e.get_mean_time(pair.second()));
             double rand_time = exp_distribution.getExponentialRandom();
@@ -100,10 +147,10 @@ public class SimulationHandler implements SimulationHandlerInterface {
         }
 
         // New shuffle for the reproduction events
-        Collections.shuffle(conform_vector);
+        Collections.shuffle(comfort_vector);
         time_counter = 0;
 
-        for (Pair<Integer, Float> pair : conform_vector) {
+        for (Pair<Integer, Float> pair : comfort_vector) {
             double rand_time = exp_distribution.getExponentialRandom();
             GenericEvent e = new ReproductionEvent(pair.first(),
                     this.simulation_data.getM(),
@@ -121,11 +168,11 @@ public class SimulationHandler implements SimulationHandlerInterface {
         }
 
         // New shuffle for the mutation events
-        Collections.shuffle(conform_vector);
+        Collections.shuffle(comfort_vector);
         time_counter = 0;
         Random rand = new Random();
 
-        for (Pair<Integer, Float> pair : conform_vector) {
+        for (Pair<Integer, Float> pair : comfort_vector) {
             double rand_time = exp_distribution.getExponentialRandom();
             GenericEvent e = new MutationEvent(
                     pair.first(),
@@ -151,19 +198,18 @@ public class SimulationHandler implements SimulationHandlerInterface {
         Map<String, Integer> event_counter = this.event_container.getEventCounter();
         int all_event_counter = 0;
 
-        for (String  s  : event_counter.keySet()) {
+        for (String s : event_counter.keySet()) {
             Integer count = event_counter.get(s);
             all_event_counter += count;
         }
 
-
         /*
-
         for (int i = 0; i < event_counter.size(); i++) {
             String key = event_counter.keySet().toArray()[i].toString();
             Integer count = event_counter.get(key);
             all_event_counter += count;
-        }*/
+        }
+        */
 
         this.ev_count = all_event_counter;
 
@@ -201,7 +247,7 @@ public class SimulationHandler implements SimulationHandlerInterface {
                 continue;
             }
             for (GenericEvent event : events) {
-                Pair<PopulationInterface, PEC> pair = event.handle(this.population, this.event_container);
+                Pair<PopulationInterface, EventContainer> pair = event.handle(this.population, this.event_container);
                 this.event_container = pair.second();
                 this.population = pair.first();
             }

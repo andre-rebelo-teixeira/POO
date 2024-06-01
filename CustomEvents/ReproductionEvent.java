@@ -2,6 +2,7 @@ package CustomEvents;
 
 import Event.GenericEvent;
 import Event.PEC;
+import Event.EventContainer;
 import Pair.Pair;
 import population.PopulationInterface;
 import ExponentialDistribution.ExponentialDistributionInterface;
@@ -25,12 +26,39 @@ import ExponentialDistribution.ExponentialDistributionInterface;
  *
  */
 public class ReproductionEvent extends GenericEvent {
+	/**
+	 * Number of changes in the simulation.
+	 */
 	private final Integer number_of_changes;
+
+	/**
+	 * Number of patrols in the simulation.
+	 */
 	private final Integer m;
+
+	/**
+	 * Death rate parameter for the simulation.
+	 */
 	private final Integer mu;
+
+	/**
+	 * Reproduction rate parameter for the simulation.
+	 */
 	private final Integer rho;
+
+	/**
+	 * Mutation rate parameter for the simulation.
+	 */
 	private final Integer delta;
+
+	/**
+	 * Number of planets in the simulation.
+	 */
 	private final Integer num_planets;
+
+	/**
+	 * Exponential distribution interface for generating random numbers.
+	 */
 	ExponentialDistributionInterface exp;
 
 	/**
@@ -87,7 +115,7 @@ public class ReproductionEvent extends GenericEvent {
 	 * @return A pair containing the updated population interface and the pending event container.
 	 */
 	@Override
-	public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
+	public Pair<PopulationInterface, EventContainer> handle(PopulationInterface population, EventContainer pec) {
 		Integer new_id = population.create_new_copy_of_individual(this.individual_id);
 		population.change_distribution_of_individual(new_id, this.number_of_changes);
 
