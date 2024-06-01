@@ -109,4 +109,8 @@ public class PEC{
     public void setEventCounter(Map<String, Integer> eventCounter) {
         EventCounter = eventCounter;
     }
+
+    public Integer size() {
+        return this.event_queue.size();
+    }
 }

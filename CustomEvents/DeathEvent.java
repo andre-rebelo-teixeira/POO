@@ -5,6 +5,7 @@ import Event.GenericEvent;
 import population.PopulationInterface;
 import java.util.function.Predicate;
 import java.util.Map;
+import Pair.Pair;
 
 /**
  * Represents an event where an individual in the population dies.
@@ -17,8 +18,8 @@ public class DeathEvent extends GenericEvent {
      * * @param id The ID of the individual that will die.
      * @param handling_time The time at which the event will be handled.
      */
-    public DeathEvent(Integer id, Double handling_time) {
-        super(id, handling_time);
+    public DeathEvent(Integer id, Integer mu) {
+        super(id, mu);
         this.remove_events = event -> event.getIndividual_id().equals(this.getIndividual_id());
     }
 
@@ -32,17 +33,23 @@ public class DeathEvent extends GenericEvent {
         return "DeathEvent";
     }
 
+    @Override
+    public Double get_mean_time(Float comfort)
+    {
+        return (1 - Math.log(1 - comfort)) * this.parameter;
+    }
+
     /**
      * Handles the death event by removing the individual from the population.
      * Updates the event counter.
      *
-     * @param event_counter The map that will be counting the amount of time each Event type has occurred.
      * @return Updated Event counter-map.
      */
     @Override
-    public Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec) {
+    public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
         pec.removeEvents(remove_events);
         population.remove_one_individual(this.getIndividual_id());
-        return this.update_event_counter(event_counter);
+        pec.setEventCounter(  this.update_event_counter( pec.getEventCounter() )) ;
+        return new  Pair<PopulationInterface, PEC> (population, pec);
     }
 }

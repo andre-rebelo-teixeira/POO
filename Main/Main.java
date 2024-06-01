@@ -7,7 +7,7 @@ public class Main {
         SimulationData simData = new SimulationData();
         simData.comand_line_arguments_parser(args);
 
-        SimulationHandler simul = new SimulationHandler(simData);
-        simul.start();
+        SimulationHandler simulate = new SimulationHandler(simData);
+        simulate.start();
     }
 }

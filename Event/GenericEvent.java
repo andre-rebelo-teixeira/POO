@@ -2,7 +2,7 @@ package Event;
 
 import population.Population;
 import population.PopulationInterface;
-
+import Pair.Pair;
 
 import java.util.Map;
 
@@ -19,7 +19,8 @@ import java.util.Map;
  */
 public abstract class GenericEvent {
 	protected Integer individual_id;
-	protected Double handling_time;
+	protected Double handling_time = Double.POSITIVE_INFINITY;
+	protected Integer parameter;
 
 	/**
 	 * Constructor for GenericEvent.
@@ -27,9 +28,9 @@ public abstract class GenericEvent {
 	 * @param id The ID of the individual affected by the event.
 	 * @param handling_time The time at which the event will be handled.
 	 */
-	public GenericEvent(Integer id, Double handling_time) {
+	public GenericEvent(Integer id, Integer parameter) {
 		this.individual_id = id;
-		this.handling_time = handling_time;
+		this.parameter = parameter;
 	}
 
 	/**
@@ -60,7 +61,7 @@ public abstract class GenericEvent {
 	 * @param event_counter The map that will be counting the amount of time each Event type has occurred.
 	 * @return Updated Event counter-map.
 	 */
-	public abstract Map<String, Integer> handle(Map<String, Integer> event_counter, PopulationInterface population, PEC pec);
+	public abstract Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec);
 
 	/**
 	 * Gets the ID of the individual affected by the event.
@@ -69,6 +70,13 @@ public abstract class GenericEvent {
 	 */
 	public Integer getIndividual_id() {
 		return individual_id;
+	}
+
+	public abstract Double get_mean_time(Float comfort);
+
+	public void setHandling_time( Double handling_time )
+	{
+		this.handling_time = handling_time;
 	}
 
 	public Double getHandling_time() {

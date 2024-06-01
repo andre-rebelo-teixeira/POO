@@ -98,6 +98,7 @@ public class SimulationData {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 this.costMatrix[i][j] = 1 + random.nextInt(10); // Generates a random number between 1 and 10
+                System.out.print(this.costMatrix[i][j] + " ");
             }
             System.out.println();
         }

@@ -10,6 +10,7 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
     private final PriorityQueue<E> queue;
     private final int maxSize;
     private int currentSize;
+    private Comparator<? super E> comparator;
 
     public FixedSizePriorityQueue(int maxSize, Comparator<? super E> comparator) {
         if (maxSize <= 0) {
@@ -18,6 +19,7 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
         this.queue = new PriorityQueue<>(comparator);
         this.maxSize = maxSize;
         this.currentSize = 0;
+        this.comparator = comparator;
     }
 
     @Override
@@ -57,10 +59,10 @@ public class FixedSizePriorityQueue<E> implements FixedSizePriorityQueueInterfac
 
     @Override
     public PriorityQueue<E> poll(Integer n) {
-        PriorityQueue<E> pq = new PriorityQueue<>(n);
+        PriorityQueue<E> pq = new PriorityQueue<E>(comparator);
 
         for (int i = 0; i < n && this.queue.peek() != null; i++) {
-            pq.offer(this.queue.poll());
+            pq.add(this.queue.poll());
         }
 
         return pq;

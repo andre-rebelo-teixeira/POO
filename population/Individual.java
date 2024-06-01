@@ -223,4 +223,18 @@ class Individual {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        Individual that = ( Individual ) o;
+        if ( Objects.equals( planet_patrol, that.planet_patrol ) )
+        {
+            if (this.get_comfort_level() != that.get_comfort_level()) return false;
+            if (this.get_max_patrol_time() != that.get_max_patrol_time()) return false;
+        }
+        return false;
+    }
 }
