@@ -4,11 +4,7 @@ import ExponentialDistribution.ExponentialDistribution;
 import ExponentialDistribution.ExponentialDistributionInterface;
 import Pair.Pair;
 
-import java.sql.Array;
 import java.util.*;
-
-import FixedSizePriorityQueue.FixedSizePriorityQueueInterface;
-import FixedSizePriorityQueue.FixedSizePriorityQueue;
 
 /**
  * The Population class manages a collection of Individual objects within a population.
@@ -188,7 +184,7 @@ public class Population implements PopulationInterface, Observer {
         boolean all_changed = true;
         for (Pair<Integer, Integer> individual_change : individuals_changes) {
             all_changed = all_changed &&
-                    this.change_distribution_of_individual(individual_change.getFirst(), individual_change.getSecond());
+                    this.change_distribution_of_individual(individual_change.first(), individual_change.second());
         }
         return all_changed;
     }
@@ -223,7 +219,7 @@ public class Population implements PopulationInterface, Observer {
     public ArrayList<Integer> create_new_copy_of_individuals(ArrayList<Pair<Integer, Integer>> individuals_changes) {
         ArrayList<Integer> new_ids = new ArrayList<>();
         for (Pair<Integer, Integer> individual_change : individuals_changes) {
-            new_ids.add(this.create_new_copy_of_individual(individual_change.getFirst()));
+            new_ids.add(this.create_new_copy_of_individual(individual_change.first()));
         }
         return new_ids;
     }
@@ -257,8 +253,8 @@ public class Population implements PopulationInterface, Observer {
     @Override
     public Float get_comfort_value(Integer individual_id) {
         for (Pair <Integer, Float> p : this.comfort_map) {
-            if (p.getFirst() == individual_id) {
-                return p.getSecond();
+            if (p.first() == individual_id) {
+                return p.second();
             }
         }
 
@@ -325,18 +321,18 @@ public class Population implements PopulationInterface, Observer {
     @Override
     public String[] get_best_individuals_string() {
         ArrayList<Individual> temp = new ArrayList<>();
-        PriorityQueue<Individual> best_individuals = this.create_priority_queue(6);
-        if (best_individuals.peek() != null &&
-                Objects.equals(best_individuals.peek().get_information_string(), this.best_individual_info.getSecond())) {
-            best_individuals.poll();
-        }
+        PriorityQueue<Individual> best_individuals = this.create_priority_queue( 6);
         String[] best_individuals_string = new String[best_individuals.size()];
-
         int counter = 0;
-        while (best_individuals.peek() != null && counter < 5) {
+        best_individuals_string[counter++ ] = best_individual_info.second();
+
+        while(best_individuals.peek() != null && counter  < 5) {
             Individual ind = best_individuals.poll();
-            best_individuals_string[counter++] = ind.get_information_string();
+            if (!Objects.equals( this.best_individual_info.second(), ind.get_information_string() )){
+                best_individuals_string[counter++] = ind.get_information_string();
+            }
         }
+        
         return best_individuals_string;
     }
 
@@ -368,7 +364,7 @@ public class Population implements PopulationInterface, Observer {
      */
     @Override
     public void update(int individualId, float comfortValue) {
-        if (this.best_individual_info.getFirst() < comfortValue) {
+        if (this.best_individual_info.first() < comfortValue) {
             Individual ind = this.individuals.get(individualId);
             this.best_individual_info = new Pair<Float, String>(comfortValue, ind.get_information_string());
         }
@@ -381,7 +377,7 @@ public class Population implements PopulationInterface, Observer {
 
         // Remove old value from the map
         for (Pair<Integer, Float> pair : this.comfort_map) {
-            if (pair.getFirst() == individualId) {
+            if (pair.first() == individualId) {
                 this.comfort_map.remove(pair); // remove previous pair
                 break;
             }
@@ -436,13 +432,21 @@ public class Population implements PopulationInterface, Observer {
 
         while (!q_.isEmpty() && q_.peek() != null) {
             Individual individual = q_.poll();
+            boolean different_individual = true;
+
             if (temp.isEmpty()) {
                 temp.add(individual);
             } else {
-                Individual temp_ind = temp.get(temp.size() - 1);
-                if (!temp_ind.equals( individual )) {
-                    temp.add(individual);
+                for (Individual ind : temp) {
+                    if (Objects.equals(individual.get_information_string(), ind.get_information_string())) {
+                        different_individual = false;
+                        break;
+                    }
                 }
+            }
+
+            if (different_individual) {
+                temp.add(individual);
             }
 
             if (temp.size() == size) {

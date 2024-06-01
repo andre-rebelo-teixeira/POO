@@ -4,13 +4,11 @@ import Event.PEC;
 import Event.GenericEvent;
 import population.PopulationInterface;
 import java.util.function.Predicate;
-import java.util.Map;
 import Pair.Pair;
 
 /**
  * Represents an event where an individual in the population dies.
  * This event will remove the individual from the population.
- *
  * The `DeathEvent` class extends the `GenericEvent` class and implements the functionality
  * for handling the death of an individual in the population.
  *

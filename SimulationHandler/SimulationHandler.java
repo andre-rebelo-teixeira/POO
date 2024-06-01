@@ -90,13 +90,12 @@ public class SimulationHandler implements SimulationHandlerInterface {
 
         // Create all the Death events
         for (Pair<Integer, Float> pair : conform_vector) {
-            GenericEvent e = new DeathEvent(pair.getFirst(), this.simulation_data.getMu());
-            this.exp_distribution.setMean(e.get_mean_time(pair.getSecond()));
+            GenericEvent e = new DeathEvent(pair.first(), this.simulation_data.getMu());
+            this.exp_distribution.setMean(e.get_mean_time(pair.second()));
             double rand_time = exp_distribution.getExponentialRandom();
             e.setHandling_time(rand_time + time_counter);
             this.event_container.addEvent(e);
             double sum = rand_time + time_counter;
-            System.out.println("Death time for id " + pair.getFirst() + " is " + sum);
             time_counter += rand_time;
         }
 
@@ -106,19 +105,18 @@ public class SimulationHandler implements SimulationHandlerInterface {
 
         for (Pair<Integer, Float> pair : conform_vector) {
             double rand_time = exp_distribution.getExponentialRandom();
-            GenericEvent e = new ReproductionEvent(pair.getFirst(),
+            GenericEvent e = new ReproductionEvent(pair.first(),
                     this.simulation_data.getM(),
                     this.simulation_data.getMu(),
                     this.simulation_data.getSigma(),
                     this.simulation_data.getPhi(),
-                    pair.getSecond(),
+                    pair.second(),
                     this.simulation_data.get_numb_planets(),
                     this.exp_distribution);
-            this.exp_distribution.setMean(e.get_mean_time(pair.getSecond()));
+            this.exp_distribution.setMean(e.get_mean_time(pair.second()));
             e.setHandling_time(rand_time + time_counter);
             this.event_container.addEvent(e);
             double sum = rand_time + time_counter;
-            System.out.println("Reproduction time for id " + pair.getFirst() + " is " + sum);
             time_counter += rand_time;
         }
 
@@ -130,15 +128,14 @@ public class SimulationHandler implements SimulationHandlerInterface {
         for (Pair<Integer, Float> pair : conform_vector) {
             double rand_time = exp_distribution.getExponentialRandom();
             GenericEvent e = new MutationEvent(
-                    pair.getFirst(),
+                    pair.first(),
                     this.simulation_data.get_numb_planets(),
                     this.simulation_data.getPhi(),
                     this.exp_distribution);
-            this.exp_distribution.setMean(e.get_mean_time(pair.getSecond()));
+            this.exp_distribution.setMean(e.get_mean_time(pair.second()));
             e.setHandling_time(rand_time + time_counter);
             this.event_container.addEvent(e);
             double sum = rand_time + time_counter;
-            System.out.println("Mutation time for id " + pair.getFirst() + " is " + sum);
             time_counter += rand_time;
         }
     }
@@ -153,11 +150,21 @@ public class SimulationHandler implements SimulationHandlerInterface {
         this.populationSize = this.population.get_population_size();
         Map<String, Integer> event_counter = this.event_container.getEventCounter();
         int all_event_counter = 0;
+
+        for (String  s  : event_counter.keySet()) {
+            Integer count = event_counter.get(s);
+            all_event_counter += count;
+        }
+
+
+        /*
+
         for (int i = 0; i < event_counter.size(); i++) {
             String key = event_counter.keySet().toArray()[i].toString();
             Integer count = event_counter.get(key);
             all_event_counter += count;
-        }
+        }*/
+
         this.ev_count = all_event_counter;
 
         if (this.simulation_data.get_max_individuals() < this.population.get_population_size()) {
@@ -172,9 +179,6 @@ public class SimulationHandler implements SimulationHandlerInterface {
     @Override
     public void start() {
         for (int i = 1; i <= maxTime; i++) {
-            System.out.println("iteration " + i + " queue size " + this.event_container.size() + " population size "
-                    + this.population.get_population_size());
-
             // Check end conditions
             if (this.event_container.get_num_events() == 0) {
                 break;
@@ -198,8 +202,8 @@ public class SimulationHandler implements SimulationHandlerInterface {
             }
             for (GenericEvent event : events) {
                 Pair<PopulationInterface, PEC> pair = event.handle(this.population, this.event_container);
-                this.event_container = pair.getSecond();
-                this.population = pair.getFirst();
+                this.event_container = pair.second();
+                this.population = pair.first();
             }
             updateStats();
             if (i % PRINT_FREQUENCY == 0) {
@@ -207,13 +211,6 @@ public class SimulationHandler implements SimulationHandlerInterface {
             }
         }
         print_simulation_observation();
-        Map<String, Integer> event_counter = this.event_container.getEventCounter();
-        for (int i = 0; i < event_counter.size(); i++) {
-            String key = event_counter.keySet().toArray()[i].toString();
-            Integer count = event_counter.get(key);
-            System.out.println("Event of type : " + key + " happened " + count);
-        }
-        System.out.println("Num individuals " + this.population.get_population_size());
     }
 
     /**
@@ -233,16 +230,17 @@ public class SimulationHandler implements SimulationHandlerInterface {
                 + "\n\t\t\tPopulation size: " + this.populationSize
                 + "\n\t\t\tNumber of epidemics: " + this.numbEpidemics
                 + "\n\t\t\tBest distribution of the patrols: "
-                + this.population.get_best_individual_values().getSecond().split(":")[0]
+                + this.population.get_best_individual_values().second().split(":")[0]
                 + "\n\t\t\tEmpire policing time: "
-                + this.population.get_best_individual_values().getSecond().split(":")[1]
-                + "\n\t\t\tComfort: " + this.population.get_best_individual_values().getFirst()
+                + this.population.get_best_individual_values().second().split(":")[1]
+                + "\n\t\t\tComfort: " + this.population.get_best_individual_values().first()
                 + "\n\t\t\tOther candidate distributions: " + best_individual_string[0]);
 
         for (int i = 1; i < best_individual_string.length && i < 5; i++) {
-            System.out.println("\t\t\t" + "                               " + best_individual_string[i]);
+            if (best_individual_string[i] != null)
+                System.out.println("\t\t\t" + "                               " + best_individual_string[i]);
         }
 
-        System.out.print("\n\n");
+        System.out.print("\n");
     }
 }

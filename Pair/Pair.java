@@ -2,32 +2,27 @@ package Pair;
 
 /**
  * Pair.java
- *
+ * <p>
  * This class represents a generic pair of objects, providing methods to access the first and second elements.
- *
+ * <p>
  * Created on 01/06/2024
- *
- * @version 1.0
- * @since 1.0
  *
  * @param <F> The type of the first element.
  * @param <S> The type of the second element.
- *
  * @author André Rebelo Teixeira
+ * @version 1.0
+ * @since 1.0
  */
-public class Pair<F, S> {
-    private final F first;
-    private final S second;
-
+public record Pair< F, S >(F first, S second)
+{
     /**
      * Constructor for the Pair class.
      *
-     * @param first The first element of the pair.
+     * @param first  The first element of the pair.
      * @param second The second element of the pair.
      */
-    public Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
+    public Pair
+    {
     }
 
     /**
@@ -35,7 +30,9 @@ public class Pair<F, S> {
      *
      * @return The first element.
      */
-    public F getFirst() {
+    @Override
+    public F first()
+    {
         return first;
     }
 
@@ -44,7 +41,9 @@ public class Pair<F, S> {
      *
      * @return The second element.
      */
-    public S getSecond() {
+    @Override
+    public S second()
+    {
         return second;
     }
 }

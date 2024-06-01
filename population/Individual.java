@@ -70,23 +70,22 @@ class Individual {
     }
 
     public int get_max_patrol_time(){
-        int max_time = 0;
+        int max_time = Integer.MIN_VALUE;
 
-        for (int i = 0; i < this.number_of_patrols; i++) {
-            int current_time = this.patrol_list.get(i).get_patrol_time();
-
-            max_time = Math.max(max_time, current_time);
+        for (Patrol p : this.patrol_list) {
+            max_time = Math.max(max_time, p.get_patrol_time());
         }
+
         return max_time;
     }
 
     public void create_random_patrol_distribution() {
         Random rand = new Random();
 
-        for (int i = 0; i < this.number_of_planetary_systems; i++){
-            int patrol = rand.nextInt(this.number_of_patrols);  
-            this.patrol_list.get(patrol).patrol_new_planet(i, planet_list.get(i));
-            this.planet_patrol.put(i, patrol);
+        for (PlanetarySystem p : this.planet_list) {
+            int patrol = rand.nextInt(this.number_of_patrols);
+            this.patrol_list.get(patrol).patrol_new_planet( p.get_id(), p );
+            this.planet_patrol.put(p.get_id(), patrol);
 
         }
 
@@ -205,13 +204,13 @@ class Individual {
     public String get_information_string() {
         StringBuilder node_info = new StringBuilder();
         node_info = new StringBuilder("{");
-        for (int i = 0; i < this.number_of_patrols; i++) {
-            Patrol patrol = this.patrol_list.get(i);
 
+        for (Patrol p : this.patrol_list) {
             node_info.append("{");
-            node_info.append(patrol.get_patrolled_planets());
+            node_info.append(p.get_patrolled_planets());
             node_info.append("},");
         }
+
         node_info.deleteCharAt(node_info.length() - 1);
         node_info.append("} : ");
         node_info.append(String.valueOf(this.get_max_patrol_time()));
@@ -235,5 +234,11 @@ class Individual {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
     }
 }
