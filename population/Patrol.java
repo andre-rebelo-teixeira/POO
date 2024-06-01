@@ -55,6 +55,9 @@ class Patrol {
 			patrol_info.append(String.valueOf(id)).append(",");
 		}
 
+		if ( ! patrol_info.isEmpty() ) {
+			patrol_info.deleteCharAt(patrol_info.length() - 1);
+		}
 		return patrol_info.toString();
 
 	}

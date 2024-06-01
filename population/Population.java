@@ -429,23 +429,28 @@ public class Population implements PopulationInterface, Observer {
         IndividualComparator individualComparator = new IndividualComparator();
         PriorityQueue<Individual> q_ = new PriorityQueue<Individual>(individualComparator);
         PriorityQueue<Individual> q = new PriorityQueue<Individual>(individualComparator);
+        ArrayList<Individual> temp = new ArrayList<>();
+
 
         q_.addAll( this.individuals.values() );
 
-        for (Individual individual : q_) {
-            if (q.peek() == null) {
-                q.add(individual);
+        while (!q_.isEmpty() && q_.peek() != null) {
+            Individual individual = q_.poll();
+            if (temp.isEmpty()) {
+                temp.add(individual);
             } else {
-                Individual temp = q.peek(); // last individual that has been added to the final priority queue
-                if (!temp.equals( individual )) {
-                    q.add(individual);
+                Individual temp_ind = temp.get(temp.size() - 1);
+                if (!temp_ind.equals( individual )) {
+                    temp.add(individual);
                 }
             }
-            if (q.size() == size)
-            {
+
+            if (temp.size() == size) {
                 break;
             }
         }
+
+        q.addAll(temp);
 
         return q;
     }

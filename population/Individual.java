@@ -232,8 +232,7 @@ class Individual {
         Individual that = ( Individual ) o;
         if ( Objects.equals( planet_patrol, that.planet_patrol ) )
         {
-            if (this.get_comfort_level() != that.get_comfort_level()) return false;
-            if (this.get_max_patrol_time() != that.get_max_patrol_time()) return false;
+            return true;
         }
         return false;
     }
