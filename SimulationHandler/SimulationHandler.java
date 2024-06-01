@@ -206,7 +206,7 @@ public class SimulationHandler implements SimulationHandlerInterface {
                 this.population = pair.first();
             }
             updateStats();
-            if (i % PRINT_FREQUENCY == 0) {
+            if (i % (maxTime / PRINT_FREQUENCY) == 0) {
                 print_simulation_observation();
             }
         }

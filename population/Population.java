@@ -322,7 +322,7 @@ public class Population implements PopulationInterface, Observer {
     public String[] get_best_individuals_string() {
         ArrayList<Individual> temp = new ArrayList<>();
         PriorityQueue<Individual> best_individuals = this.create_priority_queue( 6);
-        String[] best_individuals_string = new String[best_individuals.size()];
+        String[] best_individuals_string = new String[5];
         int counter = 0;
         best_individuals_string[counter++ ] = best_individual_info.second();
 
