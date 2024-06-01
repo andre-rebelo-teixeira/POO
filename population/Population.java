@@ -322,15 +322,23 @@ public class Population implements PopulationInterface, Observer {
     @Override
     public String[] get_best_individuals_string() {
         ArrayList<Individual> temp = new ArrayList<>();
-        PriorityQueue<Individual> best_individuals = this.create_priority_queue(6);
-        String[] best_individuals_string = new String[5];
+        PriorityQueue<Individual> best_individuals = this.create_priority_queue(12);
+        String[] best_individuals_string = new String[6];
         int counter = 0;
-        best_individuals_string[counter++] = best_individual_info.second();
 
-        while (best_individuals.peek() != null && counter < 5) {
+        while (best_individuals.peek() != null && counter < 6) {
+            boolean can_print = true;
+
             Individual ind = best_individuals.poll();
             if (!Objects.equals(this.best_individual_info.second(), ind.get_information_string())) {
-                best_individuals_string[counter++] = ind.get_information_string();
+                for (int i = 0; i < counter; i++) {
+                    if (Objects.equals( best_individuals_string[i], ind.get_information_string() )) {
+                        can_print = false;
+                    }
+                }
+                if (can_print){
+                    best_individuals_string[counter++] = ind.get_information_string();
+                }
             }
         }
 

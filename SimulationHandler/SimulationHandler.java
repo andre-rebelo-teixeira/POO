@@ -270,7 +270,7 @@ public class SimulationHandler implements SimulationHandlerInterface {
             best_individual_string = new String[] { "<No individual to show here>" };
         }
 
-        System.out.println("Observation " + this.observationNumber + ": "
+        System.out.print("Observation " + this.observationNumber + ": "
                 + "\n\t\t\tPresent Instant: " + this.presentInstant
                 + "\n\t\t\tNumber of realized events: " + this.ev_count
                 + "\n\t\t\tPopulation size: " + this.populationSize
@@ -280,7 +280,11 @@ public class SimulationHandler implements SimulationHandlerInterface {
                 + "\n\t\t\tEmpire policing time: "
                 + this.population.get_best_individual_values().second().split(":")[1]
                 + "\n\t\t\tComfort: " + this.population.get_best_individual_values().first()
-                + "\n\t\t\tOther candidate distributions: " + best_individual_string[0]);
+                + "\n\t\t\tOther candidate distributions: ");
+
+        if (best_individual_string[0] !=  null) {
+            System.out.println(best_individual_string[0]);
+        }
 
         for (int i = 1; i < best_individual_string.length && i < 5; i++) {
             if (best_individual_string[i] != null)
