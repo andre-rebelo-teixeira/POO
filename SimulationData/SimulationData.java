@@ -7,32 +7,55 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
-public class SimulationData {
+/**
+ * SimulationData.java
+ *
+ * This class manages the simulation data, including parsing command line arguments,
+ * generating cost matrices, and accessing various simulation parameters.
+ *
+ * Created on 01/06/2024
+ *
+ * @version 1.0
+ * @since 1.0
+ * @see ExponentialDistribution.ExponentialDistribution
+ * @see java.util.Random
+ * @see java.io.BufferedReader
+ * @see java.io.FileReader
+ *
+ * @author André Rebelo Teixeira
+ */
+public class SimulationData implements SimulationDataInterface {
 
-    ExponentialDistribution exponentialDistribution;
+    private ExponentialDistribution exponentialDistribution;
 
-    // input.txt file location
-    String file_path;
+    // Input file location
+    private String file_path;
 
-    // C matrix containing times for policing the planetary systems 
-    int[][] costMatrix;
+    // Cost matrix containing times for policing the planetary systems
+    private int[][] costMatrix;
 
     // Number of patrols and planets
-    int n;
-    int m;
+    private int n;
+    private int m;
 
     // Final instant of evolution
-    int tau;
+    private int tau;
 
-    // Initial and Maximum Population, respectively
-    int v;
-    int v_max;
+    // Initial and maximum population, respectively
+    private int v;
+    private int v_max;
 
     // Death, reproduction, and mutation, respectively
-    int mu;
-    int sigma;
-    int phi;
+    private int mu;
+    private int sigma;
+    private int phi;
 
+    /**
+     * Parses command line arguments to initialize simulation parameters.
+     *
+     * @param args The command line arguments.
+     */
+    @Override
     public void comand_line_arguments_parser(String[] args) {
         if (args.length > 0) {
             if ("-r".equals(args[0])) {
@@ -64,7 +87,10 @@ public class SimulationData {
         }
     }
 
-    // Parser for -f option
+    /**
+     * Parses the input file to initialize simulation parameters.
+     */
+    @Override
     public void file_parser() {
         try (BufferedReader reader = new BufferedReader(new FileReader(file_path))) {
             String[] params = reader.readLine().split(" ");
@@ -89,12 +115,13 @@ public class SimulationData {
         }
     }
 
+    /**
+     * Generates a random cost matrix for policing the planetary systems.
+     */
+    @Override
     public void cost_matrix_generation() {
-        // Create an empty matrix with dimensions number_of_patrols x number_of_planets
         this.costMatrix = new int[n][m];
         Random random = new Random();
-
-        // Fill the matrix with random values between 1 and 10
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 this.costMatrix[i][j] = 1 + random.nextInt(10); // Generates a random number between 1 and 10
@@ -104,78 +131,192 @@ public class SimulationData {
         }
     }
 
-    public int getInitialPopulationSize(){
+    /**
+     * Gets the initial population size.
+     *
+     * @return The initial population size.
+     */
+    @Override
+    public int getInitialPopulationSize() {
         return this.v;
     }
 
-    public int getFinalInstance(){
+    /**
+     * Gets the final instance of evolution.
+     *
+     * @return The final instance.
+     */
+    @Override
+    public int getFinalInstance() {
         return this.tau;
     }
 
-    public int[][] getcostMatrix(){
+    /**
+     * Gets the cost matrix.
+     *
+     * @return The cost matrix.
+     */
+    @Override
+    public int[][] getcostMatrix() {
         return this.costMatrix;
     }
 
+    /**
+     * Gets the number of patrols.
+     *
+     * @return The number of patrols.
+     */
+    @Override
     public int get_numb_patrols() {
         return this.n;
     }
 
+    /**
+     * Gets the number of planets.
+     *
+     * @return The number of planets.
+     */
+    @Override
     public int get_numb_planets() {
         return this.m;
     }
 
+    /**
+     * Gets the maximum number of individuals.
+     *
+     * @return The maximum number of individuals.
+     */
+    @Override
     public int get_max_individuals() {
         return this.v_max;
     }
 
+    /**
+     * Sets the number of patrols.
+     *
+     * @param number_of_patrols The number of patrols.
+     */
+    @Override
     public void set_numb_patrols(int number_of_patrols) {
         this.n = number_of_patrols;
     }
 
+    /**
+     * Sets the number of planets.
+     *
+     * @param number_of_planets The number of planets.
+     */
+    @Override
     public void set_numb_planets(int number_of_planets) {
         this.m = number_of_planets;
     }
 
+    /**
+     * Sets the maximum number of individuals.
+     *
+     * @param max_individuals The maximum number of individuals.
+     */
+    @Override
     public void set_max_individuals(int max_individuals) {
         this.v_max = max_individuals;
     }
 
+    /**
+     * Gets the phi parameter.
+     *
+     * @return The phi parameter.
+     */
+    @Override
     public int getPhi() {
         return phi;
     }
 
+    /**
+     * Gets the sigma parameter.
+     *
+     * @return The sigma parameter.
+     */
+    @Override
     public int getSigma() {
         return sigma;
     }
 
+    /**
+     * Gets the mu parameter.
+     *
+     * @return The mu parameter.
+     */
+    @Override
     public int getMu() {
         return mu;
     }
 
+    /**
+     * Gets the maximum number of individuals.
+     *
+     * @return The maximum number of individuals.
+     */
+    @Override
     public int getV_max() {
         return v_max;
     }
 
+    /**
+     * Gets the initial population size.
+     *
+     * @return The initial population size.
+     */
+    @Override
     public int getV() {
         return v;
     }
 
+    /**
+     * Gets the final instance of evolution.
+     *
+     * @return The final instance.
+     */
+    @Override
     public int getTau() {
         return tau;
     }
 
+    /**
+     * Gets the number of planets.
+     *
+     * @return The number of planets.
+     */
+    @Override
     public int getM() {
         return m;
     }
 
+    /**
+     * Gets the number of patrols.
+     *
+     * @return The number of patrols.
+     */
+    @Override
     public int getN() {
         return n;
     }
 
+    /**
+     * Gets the cost matrix.
+     *
+     * @return The cost matrix.
+     */
+    @Override
     public int[][] getCostMatrix() {
         return costMatrix;
     }
 
+    /**
+     * Gets the file path of the input file.
+     *
+     * @return The file path.
+     */
+    @Override
     public String getFile_path() {
         return file_path;
     }

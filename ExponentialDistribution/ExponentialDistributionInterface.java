@@ -1,59 +1,68 @@
 package ExponentialDistribution;
 
-
-
 /**
  * ExponentialDistributionInterface.java
- * Interface for the ExponentialDistribution class
- * 
+ *
+ * This interface defines the methods for an exponential distribution, including
+ * methods to get and set the mean, calculate the probability density function
+ * (PDF),
+ * cumulative distribution function (CDF), and generate random values.
+ *
  * Created on 16/06/2023
+ *
+ * @version 1.0
+ * @since 1.0
+ * @see ExponentialDistribution
+ *
+ * @author André Teixeira
  */
 public interface ExponentialDistributionInterface {
-    
 
-    /*
-        * Get the mean of the distribution
-        *
-        * @return The mean of the distribution
-        */
-    public double getMean();
+    /**
+     * Gets the mean of the distribution.
+     *
+     * @return The mean of the distribution.
+     */
+    double getMean();
 
-    /*
-        * Set the mean of the distribution
-        *
-        * @param mean The mean of the distribution
-        */ 
-    public void setMean(double mean);
+    /**
+     * Sets the mean of the distribution.
+     *
+     * @param mean The mean of the distribution.
+     */
+    void setMean(double mean);
 
+    /**
+     * Gets the probability density function (PDF) of the distribution at a given
+     * value.
+     *
+     * @param x The value at which the PDF is to be calculated.
+     * @return The PDF of the distribution at x.
+     */
+    double getPdf(double x);
 
-    /*
-        * Get the probability density function of the distribution
-        *
-        * @param x The value at which the pdf is to be calculated
-        * @return The pdf of the distribution at x
-        */    
-    public double getPdf(double x);
-    
-    /*
-        * Get the cumulative distribution function of the distribution
-        *
-        * @param x The value at which the cdf is to be calculated
-        * @return The cdf of the distribution at x
-        */
-    public double getCdf(double x);
+    /**
+     * Gets the cumulative distribution function (CDF) of the distribution at a
+     * given value.
+     *
+     * @param x The value at which the CDF is to be calculated.
+     * @return The CDF of the distribution at x.
+     */
+    double getCdf(double x);
 
-    /*
-        * Get the exponential value of the distribution
-        *
-        * @param x The value at which the exponential value is to be calculated
-        * @return The exponential value of the distribution at x
-        */
-    public double getExponentialVal(double x);
+    /**
+     * Gets the exponential value of the distribution for a given probability.
+     *
+     * @param x The probability value.
+     * @return The exponential value of the distribution corresponding to the
+     *         probability.
+     */
+    double getExponentialVal(double x);
 
-    /*
-        * Get the exponential random value of the distribution
-        *
-        * @return The exponential random value of the distribution
-        */
-    public double getExponentialRandom();
+    /**
+     * Gets a random value from the distribution.
+     *
+     * @return A random value from the distribution.
+     */
+    double getExponentialRandom();
 }

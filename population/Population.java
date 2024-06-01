@@ -17,17 +17,60 @@ import FixedSizePriorityQueue.FixedSizePriorityQueue;
  * tracking comfort levels and optimal solutions.
  */
 public class Population implements PopulationInterface, Observer {
-    private HashMap<Integer, Individual> individuals; // Stores the Individual objects in the population.
-    private int[] best_distributions; // Stores the best distributions.
-    private Integer current_id; // Keeps track of the current ID for individuals.
-    private final Integer number_of_planetary_systems; // Number of planetary systems.
-    private final Integer number_of_patrols; // Number of patrols.
-    private int[][] cost_matrix; // Cost matrix for patrol times.
-    private float t_min; // Minimum time for patrols.
-    private Boolean optimal_solution; // Flag indicating if the optimal solution is found.
-    private Pair<Float, String> best_individual_info; // Stores information about the best individual.
-    private ArrayList<Pair<Integer, Float>> comfort_map; // Map of comfort values for individuals.
-    private ExponentialDistributionInterface expo_random; // Instance of exponential distribution for randomness.
+    /**
+     * Stores the Individual objects in the population.
+     */
+    private HashMap<Integer, Individual> individuals;
+
+    /**
+     * Stores the best distributions.
+     */
+    private int[] best_distributions;
+
+    /**
+     * Keeps track of the current ID for individuals.
+     */
+    private Integer current_id;
+
+    /**
+     * Number of planetary systems.
+     */
+    private final Integer number_of_planetary_systems;
+
+    /**
+     * Number of patrols.
+     */
+    private final Integer number_of_patrols;
+
+    /**
+     * Cost matrix for patrol times.
+     */
+    private int[][] cost_matrix;
+
+    /**
+     * Minimum time for patrols.
+     */
+    private float t_min;
+
+    /**
+     * Flag indicating if the optimal solution is found.
+     */
+    private Boolean optimal_solution;
+
+    /**
+     * Stores information about the best individual.
+     */
+    private Pair<Float, String> best_individual_info;
+
+    /**
+     * Map of comfort values for individuals.
+     */
+    private ArrayList<Pair<Integer, Float>> comfort_map;
+
+    /**
+     * Instance of exponential distribution for randomness.
+     */
+    private ExponentialDistributionInterface expo_random;
 
     /**
      * Initializes a new population with a given size, number of planetary systems,

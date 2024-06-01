@@ -10,13 +10,27 @@ import Pair.Pair;
 /**
  * Represents an event where an individual in the population dies.
  * This event will remove the individual from the population.
+ *
+ * The `DeathEvent` class extends the `GenericEvent` class and implements the functionality
+ * for handling the death of an individual in the population.
+ *
+ * @version 1.0
+ * @since 1.0
+ * @see Event.GenericEvent
+ * @see Event.PEC
+ * @see population.PopulationInterface
+ * @see Pair.Pair
+ *
+ * @author André Rebelo Teixeira
  */
 public class DeathEvent extends GenericEvent {
-    Predicate<GenericEvent> remove_events;
+    private final Predicate<GenericEvent> remove_events;
+
     /**
-     * Constructor for DeathEvent
-     * * @param id The ID of the individual that will die.
-     * @param handling_time The time at which the event will be handled.
+     * Constructor for DeathEvent.
+     *
+     * @param id The ID of the individual that will die.
+     * @param mu The parameter influencing the handling time of the event.
      */
     public DeathEvent(Integer id, Integer mu) {
         super(id, mu);
@@ -33,9 +47,14 @@ public class DeathEvent extends GenericEvent {
         return "DeathEvent";
     }
 
+    /**
+     * Calculates the mean time for the event based on a comfort parameter.
+     *
+     * @param comfort The comfort parameter influencing the mean time.
+     * @return The mean time for the event.
+     */
     @Override
-    public Double get_mean_time(Float comfort)
-    {
+    public Double get_mean_time(Float comfort) {
         return (1 - Math.log(1 - comfort)) * this.parameter;
     }
 
@@ -43,13 +62,15 @@ public class DeathEvent extends GenericEvent {
      * Handles the death event by removing the individual from the population.
      * Updates the event counter.
      *
-     * @return Updated Event counter-map.
+     * @param population The population interface affected by the event.
+     * @param pec The pending event container.
+     * @return A pair containing the updated population interface and the pending event container.
      */
     @Override
     public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
         pec.removeEvents(remove_events);
         population.remove_one_individual(this.getIndividual_id());
-        pec.setEventCounter(  this.update_event_counter( pec.getEventCounter() )) ;
-        return new  Pair<PopulationInterface, PEC> (population, pec);
+        pec.setEventCounter(this.update_event_counter(pec.getEventCounter()));
+        return new Pair<>(population, pec);
     }
 }

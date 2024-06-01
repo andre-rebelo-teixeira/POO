@@ -3,17 +3,26 @@ package CustomEvents;
 import Event.GenericEvent;
 import Event.PEC;
 import Pair.Pair;
-import jdk.javadoc.doclet.Reporter;
-import population.Population;
 import population.PopulationInterface;
 import ExponentialDistribution.ExponentialDistributionInterface;
-
-import java.util.Map;
 
 /**
  * Represents an event where an individual in the population reproduces.
  * This event will create a new individual as a copy of the existing one and
  * apply changes to the new individual.
+ *
+ * The `ReproductionEvent` class extends the `GenericEvent` class and implements
+ * the functionality for handling the reproduction of an individual in the population.
+ *
+ * @version 1.0
+ * @since 1.0
+ * @see Event.GenericEvent
+ * @see Event.PEC
+ * @see population.PopulationInterface
+ * @see ExponentialDistribution.ExponentialDistributionInterface
+ * @see Pair.Pair
+ * @see java.util.Random
+ *
  */
 public class ReproductionEvent extends GenericEvent {
 	private final Integer number_of_changes;
@@ -27,35 +36,25 @@ public class ReproductionEvent extends GenericEvent {
 	/**
 	 * Constructor for ReproductionEvent.
 	 *
-	 * 
-	 * @param id   The ID of the individual that will reproduce.
-	 * @param time The time at which the event will be handled.
+	 * @param id The ID of the individual that will reproduce.
+	 * @param m Parameter influencing the number of changes.
+	 * @param mu Parameter influencing the handling time of death events.
+	 * @param rho Parameter influencing the handling time of reproduction events.
+	 * @param delta Parameter influencing the handling time of mutation events.
+	 * @param comfort Comfort level influencing the event.
+	 * @param num_planets Number of planets affecting the genetic distribution.
+	 * @param exp The exponential distribution interface for calculating event times.
 	 */
-	public ReproductionEvent(Integer id,
-			Integer m,
-			Integer mu,
-			Integer rho,
-			Integer delta,
-			Float comfort,
-			Integer num_planets,
-			ExponentialDistributionInterface exp) {
+	public ReproductionEvent(Integer id, Integer m, Integer mu, Integer rho, Integer delta, Float comfort, Integer num_planets, ExponentialDistributionInterface exp) {
 		super(id, rho);
 
-		// these values will be used to compute the times for the death, reproduction
-		// and mutation of the offspring
 		this.m = m;
 		this.mu = mu;
 		this.rho = rho;
 		this.delta = delta;
-
 		this.num_planets = num_planets;
-
-		// This value will be used to compute the time of the next events
 		this.exp = exp;
-
-		// This will be the number of changes we will compute for this event
 		this.number_of_changes = compute_number_of_changes(comfort);
-
 	}
 
 	/**
@@ -68,40 +67,44 @@ public class ReproductionEvent extends GenericEvent {
 		return "ReproductionEvent";
 	}
 
+	/**
+	 * Calculates the mean time for the event based on a comfort parameter.
+	 *
+	 * @param comfort The comfort parameter influencing the mean time.
+	 * @return The mean time for the event.
+	 */
 	@Override
 	public Double get_mean_time(Float comfort) {
 		return (1 - Math.log(comfort)) * this.parameter;
 	}
 
 	/**
-	 * Handles the reproduction event by creating a new individual as a copy of the
-	 * existing one
+	 * Handles the reproduction event by creating a new individual as a copy of the existing one
 	 * and applying changes to the new individual. Updates the event counter.
 	 *
-	 * @return Updated Event counter-map.
+	 * @param population The population interface affected by the event.
+	 * @param pec The pending event container.
+	 * @return A pair containing the updated population interface and the pending event container.
 	 */
 	@Override
 	public Pair<PopulationInterface, PEC> handle(PopulationInterface population, PEC pec) {
 		Integer new_id = population.create_new_copy_of_individual(this.individual_id);
 		population.change_distribution_of_individual(new_id, this.number_of_changes);
 
-		// We need to create a new reproduction event for the parent
-		// Get the new comfort for the individual
+		// Create a new reproduction event for the parent
 		Float comfort = population.get_comfort_value(this.individual_id);
 		Integer num_changes = compute_number_of_changes(comfort);
 
 		exp.setMean((1 - Math.log(comfort)) * this.rho);
 		double time = exp.getExponentialRandom();
 
-		GenericEvent e = new ReproductionEvent(this.individual_id, this.m, this.mu, this.rho, this.delta, comfort,
-				this.num_planets, this.exp);
+		GenericEvent e = new ReproductionEvent(this.individual_id, this.m, this.mu, this.rho, this.delta, comfort, this.num_planets, this.exp);
 		this.exp.setMean(e.get_mean_time(comfort));
 		e.setHandling_time(this.exp.getExponentialRandom() + this.handling_time);
 		pec.addEvent(e);
 
-		// We need to create reproduction, mutation and death events for the children we
-		// just spawned
-		// Death
+		// Create reproduction, mutation and death events for the offspring
+		// Death event
 		exp.setMean((1 - Math.log(1 - comfort)) * this.mu);
 		time = exp.getExponentialRandom();
 		e = new DeathEvent(new_id, this.mu);
@@ -109,7 +112,7 @@ public class ReproductionEvent extends GenericEvent {
 		e.setHandling_time(this.exp.getExponentialRandom() + this.handling_time);
 		pec.addEvent(e);
 
-		// reproduction
+		// Reproduction event
 		comfort = population.get_comfort_value(new_id);
 		num_changes = compute_number_of_changes(comfort);
 		exp.setMean((1 - Math.log(comfort)) * this.rho);
@@ -120,7 +123,7 @@ public class ReproductionEvent extends GenericEvent {
 		e.setHandling_time(this.exp.getExponentialRandom() + this.handling_time);
 		pec.addEvent(e);
 
-		// mutation
+		// Mutation event
 		exp.setMean((1 - Math.log(comfort)) * this.delta);
 		time = exp.getExponentialRandom();
 
@@ -130,14 +133,16 @@ public class ReproductionEvent extends GenericEvent {
 		pec.addEvent(e);
 
 		this.update_event_counter(pec.getEventCounter());
-		return new Pair<PopulationInterface, PEC>(population, pec);
+		return new Pair<>(population, pec);
 	}
 
 	/**
+	 * Computes the number of changes based on the comfort parameter.
 	 *
+	 * @param comfort The comfort parameter.
+	 * @return The number of changes.
 	 */
 	private Integer compute_number_of_changes(Float comfort) {
-		return (int) (1 - comfort) * this.m;
+		return (int) ((1 - comfort) * this.m);
 	}
-
 }
