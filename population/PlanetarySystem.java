@@ -3,35 +3,42 @@ package population;
 import java.util.Objects;
 
 /**
- * PlanetarySystem -> This class is used to represent the information of one planetary system,
+ * Represents a planetary system identified by a unique ID.
+ * This class is immutable; the ID can only be set through the constructor and cannot be changed.
+ * To change the ID, a new instance of PlanetarySystem must be created.
  *
- * Currently only is used to store the ID
+ * This class is final and cannot be subclassed.
  *
- * @author Andre Rebelo Teixeira
+ * Example usage:
+ * PlanetarySystem ps1 = new PlanetarySystem(1);
+ * PlanetarySystem ps2 = new PlanetarySystem(ps1);
+ * System.out.println(ps1.get_id()); // Outputs: 1
+ *
+ *
  */
 final class PlanetarySystem {
 	private final Integer id;
 
+	/**
+	 * Copy constructor to create a new PlanetarySystem based on an existing one.
+	 * @param p The PlanetarySystem to copy.
+	 */
 	public PlanetarySystem(PlanetarySystem p) {
 		this.id = p.id;
 	}
 
 	/**
-	 *
-	 * method that allows us to Create an object of type PlanetarySystem,
-	 * The id of the object is final and can only be set through the constructor, in case we can to change the id,
-	 * we must delete the object and create a new one
-	 *
-	 * @param id - This will be the ID of the planetary System
+	 * Constructs a PlanetarySystem with a specified ID.
+	 * The ID of the PlanetarySystem is final and cannot be changed once set.
+	 * @param id The unique ID of the PlanetarySystem.
 	 */
-	public PlanetarySystem (Integer id) {
+	public PlanetarySystem(Integer id) {
 		this.id = id;
 	}
 
 	/**
-	 * This method is used to get the ID of the object
-	 *
-	 * @return The object ID
+	 * Gets the ID of the PlanetarySystem.
+	 * @return The ID of the PlanetarySystem.
 	 */
 	public int get_id() {
 		return this.id;
@@ -57,4 +64,3 @@ final class PlanetarySystem {
 				'}';
 	}
 }
-	
